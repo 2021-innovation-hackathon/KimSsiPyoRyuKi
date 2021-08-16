@@ -15,9 +15,9 @@ public class Video {
 
     @Id
     @GeneratedValue
-    private Long Id;
+    private Long id;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false, length = 500, unique = true)
     private String url;
 
     @ManyToOne
