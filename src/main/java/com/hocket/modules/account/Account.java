@@ -17,16 +17,19 @@ public class Account {
     @Id @GeneratedValue
     private Long id;
 
+    @Column(unique = true)
     private String nickname;
 
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE)
     private Set<LikeHeart> likeHearts = new HashSet<>();
+
+    //TODO 가입 시간 , 나이, 성별 ?
 
 
 
