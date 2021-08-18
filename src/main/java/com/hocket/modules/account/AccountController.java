@@ -2,10 +2,10 @@ package com.hocket.modules.account;
 
 
 import com.hocket.modules.account.dto.AccountDto;
-import com.hocket.modules.account.form.AccountForm;
+import com.hocket.modules.account.form.LoginForm;
+import com.hocket.modules.account.form.SignUpForm;
 import com.hocket.modules.account.validator.AccountFormValidator;
 import lombok.RequiredArgsConstructor;
-import org.dom4j.rule.Mode;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Controller;
@@ -34,12 +34,12 @@ public class AccountController {
     }
 
     @PostMapping("/sign-up")
-    public @ResponseBody String signUp(@Valid AccountForm accountForm, Errors errors) throws InterruptedException {
+    public @ResponseBody String signUp(@Valid SignUpForm signUpForm, Errors errors) throws InterruptedException {
         if(errors.hasErrors()){
             return errors.getAllErrors().get(0).getCode();
         }
-        Account newAccount = accountService.saveAccount(accountForm);
-        accountService.login(newAccount.getId(),accountForm.getToken());
+        Account newAccount = accountService.saveAccount(signUpForm);
+        accountService.login(newAccount.getId(),signUpForm.getToken());
 
         return "ok";
     }

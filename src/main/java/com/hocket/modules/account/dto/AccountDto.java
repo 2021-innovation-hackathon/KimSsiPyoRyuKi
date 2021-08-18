@@ -1,11 +1,7 @@
 package com.hocket.modules.account.dto;
 
-import com.hocket.modules.likeheart.LikeHeart;
 import lombok.Data;
 
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 public class AccountDto {
@@ -24,5 +20,4 @@ public class AccountDto {
 
     private String profileImage;
 
-    private Set<LikeHeart> likeHearts = new HashSet<>();
 }

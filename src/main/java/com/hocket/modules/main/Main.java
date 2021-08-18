@@ -3,11 +3,10 @@ package com.hocket.modules.main;
 import com.hocket.modules.account.Account;
 import com.hocket.modules.account.AccountRepository;
 import com.hocket.modules.account.AccountService;
-import com.hocket.modules.account.form.AccountForm;
+import com.hocket.modules.account.form.LoginForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @RequiredArgsConstructor
@@ -20,14 +19,14 @@ public class Main {
 
 
     @PostMapping("/login")
-    public ResponseEntity login(AccountForm accountForm){
-        Account account = accountRepository.findByEmail(accountForm.getEmail());
+    public ResponseEntity login(LoginForm loginForm){
+        Account account = accountRepository.findByEmail(loginForm.getEmail());
 
         if(account == null){
             return ResponseEntity.notFound().build();
         }
         else{
-            accountService.login(account.getId(), accountForm.getToken());
+            accountService.login(account.getId(), loginForm.getToken());
             return ResponseEntity.ok().build();
         }
     }

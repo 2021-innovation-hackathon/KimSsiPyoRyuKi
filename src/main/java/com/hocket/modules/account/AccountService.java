@@ -1,6 +1,7 @@
 package com.hocket.modules.account;
 
-import com.hocket.modules.account.form.AccountForm;
+import com.hocket.modules.account.form.LoginForm;
+import com.hocket.modules.account.form.SignUpForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -23,9 +24,9 @@ public class AccountService {
     private final CacheManager cacheManager;
 
 
-    public Account saveAccount(AccountForm accountForm) {
+    public Account saveAccount(SignUpForm signUpForm) {
 
-        Account account = accountRepository.save(modelMapper.map(accountForm, Account.class));
+        Account account = accountRepository.save(modelMapper.map(signUpForm , Account.class));
 
         return account;
     }
