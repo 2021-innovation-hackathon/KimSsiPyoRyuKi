@@ -13,8 +13,12 @@ public class AccountFactory {
 
         Account account = new Account();
         account.setNickname(nickname);
-        account.setName("test name");
+        account.setName("김태준");
         account.setEmail(email);
+        account.setProfileImage("profileImage");
+        account.setAgeRange("20~29");
+        account.setName("김태준");
+
 
         return accountRepository.save(account);
     }

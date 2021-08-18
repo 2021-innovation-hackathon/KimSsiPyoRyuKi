@@ -1,13 +1,15 @@
 package com.hocket.modules.account;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hocket.modules.account.dto.AccountDto;
-import com.hocket.modules.account.form.LoginForm;
 import com.hocket.modules.account.form.SignUpForm;
-import com.hocket.modules.account.validator.AccountFormValidator;
+import com.hocket.modules.account.validator.SignUpFormValidator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
@@ -19,7 +21,7 @@ import javax.validation.Valid;
 @Controller
 public class AccountController {
 
-    private final AccountFormValidator accountFormValidator;
+    private final SignUpFormValidator signUpFormValidator;
     private final AccountService accountService;
 
     private final CacheManager cacheManager;
@@ -27,27 +29,47 @@ public class AccountController {
     private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
 
-
-    @InitBinder
+    @InitBinder("signUpForm")
     public void signUpInit(WebDataBinder webDataBinder ){
-        webDataBinder.addValidators(accountFormValidator);
+        webDataBinder.addValidators(signUpFormValidator);
     }
 
     @PostMapping("/sign-up")
-    public @ResponseBody String signUp(@Valid SignUpForm signUpForm, Errors errors) throws InterruptedException {
+    public @ResponseBody String signUp(@Valid SignUpForm signUpForm, Errors errors) {
+
         if(errors.hasErrors()){
             return errors.getAllErrors().get(0).getCode();
         }
-        Account newAccount = accountService.saveAccount(signUpForm);
-        accountService.login(newAccount.getId(),signUpForm.getToken());
+        String token = signUpForm.getToken();
+        boolean isValid = accountService.checkToken(token);
+
+        if(isValid){
+            JsonNode userInfo = accountService.getInfoByToken(token);
+            if(userInfo.findValue("email") ==null){
+                return "disagree.email";
+            }
+            if(accountRepository.existsByEmail(userInfo.findValue("email").textValue())){
+                return "exists.email";
+            }
+            Account newAccount = accountService.saveAccount(userInfo, signUpForm.getNickname());
+            accountService.login(newAccount.getId(),token);
+        }
+        if(!isValid){
+            return "wrong.token";
+        }
 
         return "ok";
     }
 
     @GetMapping("/account/info/{token}")
     public @ResponseBody AccountDto getAccountInfo(@PathVariable String token){
-        Long accountId = (Long) cacheManager.getCache("account").get(token).get();
-        Account account = accountRepository.findById(accountId).get();
+        Cache.ValueWrapper valueWrapper = cacheManager.getCache("account").get(token);
+
+        if(valueWrapper == null){
+            return null;
+        }
+
+        Account account = accountRepository.findById((Long)valueWrapper.get()).get();
 
         return modelMapper.map(account, AccountDto.class);
 

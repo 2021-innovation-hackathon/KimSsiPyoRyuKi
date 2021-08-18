@@ -1,11 +1,15 @@
 package com.hocket.modules.account;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -37,13 +42,15 @@ class AccountControllerTest {
     @Autowired
     CacheManager cacheManager;
 
-    @Autowired
+    @MockBean
     AccountService accountService;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @BeforeEach
     void cleanUp(){
         accountRepository.deleteAll();
-        cacheManager.getCache("account").clear();
     }
 
 
@@ -52,19 +59,23 @@ class AccountControllerTest {
     void signUp_with_correct_input() throws Exception {
 
         String token = UUID.randomUUID().toString();
+
+        Account accountData = new Account();
+        accountData.setName("김태준");
+        accountData.setEmail("test@email.com");
+        accountData.setId(1L);
+
+        JsonNode jsonNode = objectMapper.readTree(objectMapper.writeValueAsString(accountData));
+        when(accountService.getInfoByToken(token)).thenReturn(jsonNode);
+        when(accountService.checkToken(token)).thenReturn(true);
+        when(accountService.saveAccount(jsonNode, "bigave")).thenReturn(accountData);
+
         mockMvc.perform(post("/sign-up")
                 .param("nickname", "bigave")
-                .param("name", "김태준")
-                .param("email", "test@email.com")
                 .param("token", token)
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().string("ok"));
-
-        Account account = accountRepository.findByNickname("bigave");
-
-        assertNotNull(account);
-        assertThat(cacheManager.getCache("account").get(token).get()).isEqualTo(account.getId());
 
     }
 
@@ -89,13 +100,17 @@ class AccountControllerTest {
     @Test
     void signUp_exists_email() throws Exception {
 
-        accountFactory.createNewAccount("bigave", "test@email.com");
+        String token = UUID.randomUUID().toString();
+        Account account = accountFactory.createNewAccount("bigave", "test@email.com");
+
+        JsonNode jsonNode = objectMapper.readTree(objectMapper.writeValueAsString(account));
+        when(accountService.getInfoByToken(token)).thenReturn(jsonNode);
+        when(accountService.checkToken(token)).thenReturn(true);
+
 
         mockMvc.perform(post("/sign-up")
                 .param("nickname", "bigave2")
-                .param("name", "김태준")
-                .param("email", "test@email.com")
-                .param("token", UUID.randomUUID().toString())
+                .param("token", token)
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().string("exists.email"));
@@ -126,8 +141,7 @@ class AccountControllerTest {
         String token = UUID.randomUUID().toString();
 
         Account account = accountFactory.createNewAccount("bigave", "test@email.com");
-        accountService.login(account.getId(), token);
-
+        cacheManager.getCache("account").put(token, account.getId());
 
         mockMvc.perform(get("/account/info/"+token)
                 .accept(MediaType.APPLICATION_JSON))
