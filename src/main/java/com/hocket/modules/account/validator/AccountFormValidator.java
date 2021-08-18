@@ -1,6 +1,7 @@
-package com.hocket.modules.account.form;
+package com.hocket.modules.account.validator;
 
 import com.hocket.modules.account.AccountRepository;
+import com.hocket.modules.account.form.AccountForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

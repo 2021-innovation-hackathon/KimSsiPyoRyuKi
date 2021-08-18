@@ -1,5 +1,6 @@
 package com.hocket.modules.main;
 
+import com.hocket.modules.account.Account;
 import com.hocket.modules.account.AccountFactory;
 import com.hocket.modules.account.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,10 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
@@ -31,10 +34,14 @@ class MainTest {
     @Autowired
     AccountFactory accountFactory;
 
+    @Autowired
+    CacheManager cacheManager;
+
 
     @BeforeEach
     void cleanUp(){
         accountRepository.deleteAll();
+        cacheManager.getCache("account").clear();
     }
 
 
@@ -42,16 +49,19 @@ class MainTest {
     @Test
     void login() throws Exception {
 
-        accountFactory.createNewAccount("bigave", "test@email.com");
+        String token = UUID.randomUUID().toString();
+
+        Account account = accountFactory.createNewAccount("bigave", "test@email.com");
 
         mockMvc.perform(post("/login")
                 .param("nickname", "bigave")
                 .param("name", "김태준")
                 .param("email", "test@email.com")
-                .param("token", UUID.randomUUID().toString())
+                .param("token", token)
                 .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(authenticated().withUsername("bigave"));
+                .andExpect(status().isOk());
+
+        assertThat(cacheManager.getCache("account").get(token).get()).isEqualTo(account.getId());
 
     }
 
