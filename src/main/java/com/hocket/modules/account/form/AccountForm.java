@@ -6,14 +6,21 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class AccountForm {
 
-    private String nickname;
-
     @NotBlank
-    private String name;
-
     private String email;
 
     @NotBlank
     private String token;
+
+    private String name;
+
+    private String nickname;
+
+    private String gender;
+
+    private int age;
+
+    private String profileImage;
+
 
 }

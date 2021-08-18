@@ -17,14 +17,19 @@ public class Account {
     @Id @GeneratedValue
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String nickname;
-
-    @Column(nullable = false)
-    private String name;
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    private String name;
+
+    private String gender;
+
+    private Integer age;
+
+    private String profileImage;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE)
     private Set<LikeHeart> likeHearts = new HashSet<>();
