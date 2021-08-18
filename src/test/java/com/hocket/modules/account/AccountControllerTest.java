@@ -17,8 +17,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -64,9 +63,10 @@ class AccountControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("ok"));
 
+        Account account = accountRepository.findByNickname("bigave");
 
-        assertTrue(accountRepository.existsByNickname("bigave"));
-        assertThat(cacheManager.getCache("account").get(token).get()).isEqualTo(1L);
+        assertNotNull(account);
+        assertThat(cacheManager.getCache("account").get(token).get()).isEqualTo(account.getId());
 
     }
 
