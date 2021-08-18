@@ -1,7 +1,8 @@
 package com.hocket.modules.account.validator;
 
 import com.hocket.modules.account.AccountRepository;
-import com.hocket.modules.account.form.AccountForm;
+import com.hocket.modules.account.form.LoginForm;
+import com.hocket.modules.account.form.SignUpForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -15,23 +16,23 @@ public class AccountFormValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.isAssignableFrom(AccountForm.class);
+        return clazz.isAssignableFrom(LoginForm.class);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        AccountForm accountForm = (AccountForm) target;
+        SignUpForm signUpForm = (SignUpForm) target;
 
-        if(accountRepository.existsByNickname(accountForm.getNickname())){
+        if(accountRepository.existsByNickname(signUpForm.getNickname())){
             errors.rejectValue("nickname", "exists.nickname");
         }
-        if(accountRepository.existsByEmail(accountForm.getEmail())){
+        if(accountRepository.existsByEmail(signUpForm.getEmail())){
             errors.rejectValue("email", "exists.email");
         }
 
         String patter = "[a-z가-힣0-9_]{2,20}$";
 
-        if(!accountForm.getNickname().matches(patter)){
+        if(!signUpForm.getNickname().matches(patter)){
             errors.rejectValue("nickname", "wrong.nickname");
 
         }
