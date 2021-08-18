@@ -27,7 +27,7 @@ public class Account {
 
     private String gender;
 
-    private Integer age;
+    private String ageRange;
 
     private String profileImage;
 

@@ -8,19 +8,15 @@ import javax.validation.constraints.NotBlank;
 public class SignUpForm {
 
     @NotBlank
-    private String email;
-
-    @NotBlank
     private String token;
-
     @NotBlank
     private String nickname;
 
-    private String name;
-
-    private String gender;
-
-    private int age;
-
-    private String profileImage;
+//    private String name;
+//
+//    private String gender;
+//
+//    private int age;
+//
+//    private String profileImage;
 }

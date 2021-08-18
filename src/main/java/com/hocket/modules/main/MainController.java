@@ -1,5 +1,6 @@
 package com.hocket.modules.main;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hocket.modules.account.Account;
 import com.hocket.modules.account.AccountRepository;
 import com.hocket.modules.account.AccountService;
@@ -9,9 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Map;
+
 @RequiredArgsConstructor
 @Controller
-public class Main {
+public class MainController {
 
     private final AccountRepository accountRepository;
     private final AccountService accountService;
@@ -19,14 +22,29 @@ public class Main {
 
 
     @PostMapping("/login")
-    public ResponseEntity login(LoginForm loginForm){
-        Account account = accountRepository.findByEmail(loginForm.getEmail());
+    public ResponseEntity login(String token){
+        String email="";
+        boolean isValid = accountService.checkToken(token);
+
+        if(isValid){
+            JsonNode userInfo = accountService.getInfoByToken(token);
+
+            if(userInfo.findValue("email") ==null){
+                return ResponseEntity.badRequest().build();
+            }
+            email = userInfo.findValue("email").textValue();
+        }
+        if(!isValid){
+            return ResponseEntity.badRequest().build();
+        }
+
+        Account account = accountRepository.findByEmail(email);
 
         if(account == null){
             return ResponseEntity.notFound().build();
         }
         else{
-            accountService.login(account.getId(), loginForm.getToken());
+            accountService.login(account.getId(), token);
             return ResponseEntity.ok().build();
         }
     }

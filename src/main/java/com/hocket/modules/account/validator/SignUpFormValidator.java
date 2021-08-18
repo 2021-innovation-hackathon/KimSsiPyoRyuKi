@@ -10,13 +10,13 @@ import org.springframework.validation.Validator;
 
 @RequiredArgsConstructor
 @Component
-public class AccountFormValidator implements Validator {
+public class SignUpFormValidator implements Validator {
 
     private final AccountRepository accountRepository;
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.isAssignableFrom(LoginForm.class);
+        return clazz.isAssignableFrom(SignUpForm.class);
     }
 
     @Override
@@ -26,12 +26,8 @@ public class AccountFormValidator implements Validator {
         if(accountRepository.existsByNickname(signUpForm.getNickname())){
             errors.rejectValue("nickname", "exists.nickname");
         }
-        if(accountRepository.existsByEmail(signUpForm.getEmail())){
-            errors.rejectValue("email", "exists.email");
-        }
 
         String patter = "[a-z가-힣0-9_]{2,20}$";
-
         if(!signUpForm.getNickname().matches(patter)){
             errors.rejectValue("nickname", "wrong.nickname");
 
