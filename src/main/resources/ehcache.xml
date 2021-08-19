@@ -22,7 +22,7 @@
         <key-type>java.lang.String</key-type>
         <value-type>java.lang.Long</value-type>
         <expiry>
-            <ttl unit="hours">13</ttl>
+            <ttl unit="hours">12</ttl>
         </expiry>
         <resources>
             <heap unit="entries">200</heap>

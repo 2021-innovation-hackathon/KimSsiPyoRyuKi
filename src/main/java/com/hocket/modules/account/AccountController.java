@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class AccountController {
 
     private final SignUpFormValidator signUpFormValidator;
@@ -35,7 +33,7 @@ public class AccountController {
     }
 
     @PostMapping("/sign-up")
-    public @ResponseBody String signUp(@Valid SignUpForm signUpForm, Errors errors) {
+    public String signUp(@Valid SignUpForm signUpForm, Errors errors) {
 
         if(errors.hasErrors()){
             return errors.getAllErrors().get(0).getCode();
@@ -62,7 +60,7 @@ public class AccountController {
     }
 
     @GetMapping("/account/info/{token}")
-    public @ResponseBody AccountDto getAccountInfo(@PathVariable String token){
+    public AccountDto getAccountInfo(@PathVariable String token){
         Cache.ValueWrapper valueWrapper = cacheManager.getCache("account").get(token);
 
         if(valueWrapper == null){
