@@ -12,11 +12,4 @@ public class SignUpForm {
     @NotBlank
     private String nickname;
 
-//    private String name;
-//
-//    private String gender;
-//
-//    private int age;
-//
-//    private String profileImage;
 }

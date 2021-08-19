@@ -34,7 +34,6 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE)
     private Set<LikeHeart> likeHearts = new HashSet<>();
 
-    //TODO 가입 시간 , 나이, 성별 ?
 
 
 
