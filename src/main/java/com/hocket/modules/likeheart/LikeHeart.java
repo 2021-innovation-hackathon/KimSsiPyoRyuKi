@@ -1,7 +1,7 @@
 package com.hocket.modules.likeheart;
 
 import com.hocket.modules.account.Account;
-import com.hocket.modules.bucket.Bucket;
+import com.hocket.modules.hocket.Hocket;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,5 +20,5 @@ public class LikeHeart {
     private Account account;
 
     @ManyToOne
-    private Bucket bucket;
+    private Hocket hocket;
 }

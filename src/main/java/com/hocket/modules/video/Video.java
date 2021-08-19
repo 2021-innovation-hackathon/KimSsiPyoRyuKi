@@ -1,6 +1,6 @@
 package com.hocket.modules.video;
 
-import com.hocket.modules.bucket.Bucket;
+import com.hocket.modules.hocket.Hocket;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,5 +21,5 @@ public class Video {
     private String url;
 
     @ManyToOne
-    private Bucket bucket;
+    private Hocket hocket;
 }
