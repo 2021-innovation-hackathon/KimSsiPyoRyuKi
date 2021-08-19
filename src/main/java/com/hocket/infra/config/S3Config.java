@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 
-@PropertySource("classpath:application-dev.properties")
+@PropertySource("classpath:application-heroku.properties")
 @Configuration
 public class S3Config {
 
