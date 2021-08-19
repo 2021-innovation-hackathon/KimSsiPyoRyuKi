@@ -7,7 +7,9 @@ import com.sun.net.httpserver.Headers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -19,8 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import javax.sound.midi.Soundbank;
-import java.net.URL;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
@@ -31,11 +32,9 @@ import java.util.Objects;
 public class AccountService {
 
     private final AccountRepository accountRepository;
-    private final ModelMapper modelMapper;
-
-    private final CacheManager cacheManager;
 
     private RestTemplate restTemplate = new RestTemplate();
+    private CacheManager cacheManager;
 
 
     public Account saveAccount(JsonNode userInfo, String nickname) {
@@ -49,13 +48,14 @@ public class AccountService {
         account.setNickname(nickname);
 
         Account newAccount = accountRepository.save(account);
-
         return newAccount;
     }
 
     @CachePut(cacheNames = "account", key = "#token")
     public Long login(Long accountId, String token){
+
         //save Cache <Token, account Id>
+
 
         return  accountId;
     }
@@ -95,16 +95,38 @@ public class AccountService {
 
         try {
             ResponseEntity<JsonNode> responseEntity = restTemplate.postForEntity("https://kapi.kakao.com/v2/user/me", entity, JsonNode.class);
-            System.out.println("getInfoToken Response: " + responseEntity);
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 return responseEntity.getBody();
             }
 
         }catch (Exception e) {
-            System.out.println(e);
+            log.error(e.getMessage());
         }
 
         return null;
     }
 
+    public Long getAccountIdByToken(String token) {
+        boolean isValid = checkToken(token);
+        if(!isValid){
+            return null;
+        }
+        Cache.ValueWrapper account = cacheManager.getCache("account").get(token);
+        if(account != null){
+            return (Long) account.get();
+        }
+
+        JsonNode accountInfo = getInfoByToken(token);
+        JsonNode email = accountInfo.get("email");
+
+        if(email == null){
+            return null;
+        }
+        Account byEmail = accountRepository.findByEmail(email.textValue());
+        if(byEmail == null){
+            return null;
+        }
+
+        return byEmail.getId();
+    }
 }

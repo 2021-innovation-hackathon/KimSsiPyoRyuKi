@@ -19,7 +19,6 @@ public class AccountFactory {
         account.setAgeRange("20~29");
         account.setName("김태준");
 
-
         return accountRepository.save(account);
     }
 }
