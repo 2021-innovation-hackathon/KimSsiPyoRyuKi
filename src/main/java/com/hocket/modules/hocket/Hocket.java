@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,10 +27,10 @@ public class Hocket {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    private String thumbnailImage;
+
     private String description;
 
-    @Column(nullable = false)
     private String location;
 
     @Column(nullable = false)
@@ -43,23 +42,25 @@ public class Hocket {
     @Column(nullable = false)
     private boolean isAchieved;
 
+    private LocalDateTime createdDateTime;
+
     private LocalDateTime startDateTime;
 
     private LocalDateTime endDateTime;
 
     private Integer perWeeks;
 
-//    @OneToMany(cascade = CascadeType.REMOVE)
-//    private Set<Image> images = new HashSet<>();
-//
-//    @OneToMany(cascade = CascadeType.REMOVE)
-//    private Set<Video> videos;
-
     @OneToMany
     private Set<Tag> tags = new HashSet<>();
 
     @OneToMany(mappedBy = "hocket", cascade = CascadeType.REMOVE)
     Set<LikeHeart> likeHearts = new HashSet<>();
+
+    //    @OneToMany(cascade = CascadeType.REMOVE)
+//    private Set<Image> images = new HashSet<>();
+//
+//    @OneToMany(cascade = CascadeType.REMOVE)
+//    private Set<Video> videos;
 
 
 }
