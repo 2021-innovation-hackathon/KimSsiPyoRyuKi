@@ -3,23 +3,18 @@ package com.hocket.modules.account;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hocket.modules.account.dto.AccountDto;
-import com.hocket.modules.account.form.SignUpForm;
-import com.hocket.modules.account.validator.SignUpFormValidator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
 public class AccountController {
 
-    private final SignUpFormValidator signUpFormValidator;
     private final AccountService accountService;
 
     private final CacheManager cacheManager;
@@ -27,29 +22,27 @@ public class AccountController {
     private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
 
-    @InitBinder("signUpForm")
-    public void signUpInit(WebDataBinder webDataBinder ){
-        webDataBinder.addValidators(signUpFormValidator);
-    }
 
     @PostMapping("/sign-up")
-    public String signUp(@Valid SignUpForm signUpForm, Errors errors) {
+    public String signUp(String token) {
 
-        if(errors.hasErrors()){
-            return errors.getAllErrors().get(0).getCode();
-        }
-        String token = signUpForm.getToken();
         boolean isValid = accountService.checkToken(token);
 
         if(isValid){
             JsonNode userInfo = accountService.getInfoByToken(token);
-            if(userInfo.findValue("email") ==null){
+            if(userInfo.findValue("email") == null){
                 return "disagree.email";
+            }
+            if(userInfo.findValue("nickname") == null){
+                return "disagree.nickname";
+            }
+            if(userInfo.findValue("age_range") == null){
+                return "disagree.ageRange";
             }
             if(accountRepository.existsByEmail(userInfo.findValue("email").textValue())){
                 return "exists.email";
             }
-            Account newAccount = accountService.saveAccount(userInfo, signUpForm.getNickname());
+            Account newAccount = accountService.saveAccount(userInfo);
             accountService.login(newAccount.getId(),token);
         }
         if(!isValid){

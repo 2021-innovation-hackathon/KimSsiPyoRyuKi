@@ -13,11 +13,9 @@ public class AccountFactory {
 
         Account account = new Account();
         account.setNickname(nickname);
-        account.setName("김태준");
         account.setEmail(email);
-        account.setProfileImage("profileImage");
         account.setAgeRange("20~29");
-        account.setName("김태준");
+        account.setGender("male");
 
         return accountRepository.save(account);
     }
