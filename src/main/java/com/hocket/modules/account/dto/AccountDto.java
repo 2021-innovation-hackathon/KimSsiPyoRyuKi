@@ -18,6 +18,4 @@ public class AccountDto {
 
     private Integer age;
 
-    private String profileImage;
-
 }

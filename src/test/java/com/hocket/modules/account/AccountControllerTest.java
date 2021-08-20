@@ -14,6 +14,8 @@ import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,38 +63,25 @@ class AccountControllerTest {
         String token = UUID.randomUUID().toString();
 
         Account accountData = new Account();
-        accountData.setName("김태준");
         accountData.setEmail("test@email.com");
-        accountData.setId(1L);
+        accountData.setNickname("김태준");
+        accountData.setAgeRange("20~29");
 
-        JsonNode jsonNode = objectMapper.readTree(objectMapper.writeValueAsString(accountData));
-        when(accountService.getInfoByToken(token)).thenReturn(jsonNode);
+        Map<String, String> kakaoData =new HashMap<>();
+        kakaoData.put("email", accountData.getEmail());
+        kakaoData.put("nickname", accountData.getNickname());
+        kakaoData.put("age_range", accountData.getAgeRange());
+
+        JsonNode kakaoNode = objectMapper.convertValue(kakaoData, JsonNode.class);
+        when(accountService.getInfoByToken(token)).thenReturn(kakaoNode);
         when(accountService.checkToken(token)).thenReturn(true);
-        when(accountService.saveAccount(jsonNode, "bigave")).thenReturn(accountData);
+        when(accountService.saveAccount(kakaoNode)).thenReturn(accountData);
 
         mockMvc.perform(post("/sign-up")
-                .param("nickname", "bigave")
                 .param("token", token)
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().string("ok"));
-
-    }
-
-    @DisplayName("회원 가입 테스트 - 이미 존재하는 닉네임")
-    @Test
-    void signUp_exists_nickname() throws Exception {
-
-        accountFactory.createNewAccount("bigave", "test@email.com");
-
-        mockMvc.perform(post("/sign-up")
-                .param("nickname", "bigave")
-                .param("name", "김태준")
-                .param("email", "test2@email.com")
-                .param("token", UUID.randomUUID().toString())
-                .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(content().string("exists.nickname"));
 
     }
 
@@ -103,13 +92,17 @@ class AccountControllerTest {
         String token = UUID.randomUUID().toString();
         Account account = accountFactory.createNewAccount("bigave", "test@email.com");
 
-        JsonNode jsonNode = objectMapper.readTree(objectMapper.writeValueAsString(account));
-        when(accountService.getInfoByToken(token)).thenReturn(jsonNode);
+        Map<String, String> kakaoData =new HashMap<>();
+        kakaoData.put("email", account.getEmail());
+        kakaoData.put("nickname", account.getNickname());
+        kakaoData.put("age_range", account.getAgeRange());
+
+        JsonNode kakaoNode = objectMapper.convertValue(kakaoData, JsonNode.class);
+        when(accountService.getInfoByToken(token)).thenReturn(kakaoNode);
         when(accountService.checkToken(token)).thenReturn(true);
 
 
         mockMvc.perform(post("/sign-up")
-                .param("nickname", "bigave2")
                 .param("token", token)
                 .with(csrf()))
                 .andExpect(status().isOk())
@@ -117,22 +110,6 @@ class AccountControllerTest {
 
     }
 
-    @DisplayName("회원 가입 테스트 - 잘못된 닉네임 형식")
-    @Test
-    void signUp_wrong_nickname() throws Exception {
-
-        mockMvc.perform(post("/sign-up")
-                .param("nickname", "--wrong")
-                .param("name", "김태준")
-                .param("email", "test@email.com")
-                .param("token", UUID.randomUUID().toString())
-                .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(content().string("wrong.nickname"));
-
-        assertFalse(accountRepository.existsByNickname("--wrong"));
-
-    }
 
     @DisplayName("계정 정보 가져오기")
     @Test

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -71,12 +73,18 @@ class AccountServiceTest {
         String token = UUID.randomUUID().toString();
 
         Account accountData = new Account();
-        accountData.setName("김태준");
         accountData.setEmail("test@email.com");
+        accountData.setNickname("김태준");
+        accountData.setAgeRange("20~29");
 
-        JsonNode jsonNode = objectMapper.readTree(objectMapper.writeValueAsString(accountData));
+        Map<String, String> kakaoData =new HashMap<>();
+        kakaoData.put("email", accountData.getEmail());
+        kakaoData.put("nickname", accountData.getNickname());
+        kakaoData.put("age_range", accountData.getAgeRange());
 
-        Account account = accountService.saveAccount(jsonNode, "bigave");
+        JsonNode kakaoNode = objectMapper.convertValue(kakaoData, JsonNode.class);
+
+        Account account = accountService.saveAccount(kakaoNode);
 
         assertNotNull(account);
         assertEquals(account,accountRepository.findByEmail("test@email.com"));

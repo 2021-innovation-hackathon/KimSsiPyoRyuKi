@@ -35,6 +35,6 @@ public class HocketForm {
 
     private String description;
 
-    private String location;
+    private String hocketSpot;
 
 }
