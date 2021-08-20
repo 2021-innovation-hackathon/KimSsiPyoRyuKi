@@ -3,7 +3,7 @@ package com.hocket.modules.hocket;
 
 import com.hocket.modules.account.Account;
 import com.hocket.modules.likeheart.LikeHeart;
-import com.hocket.modules.tag.Tag;
+import com.hocket.modules.category.Category;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,8 +50,8 @@ public class Hocket {
 
     private Integer perWeeks;
 
-    @OneToMany
-    private Set<Tag> tags = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Category> categories = new HashSet<>();
 
     @OneToMany(mappedBy = "hocket", cascade = CascadeType.REMOVE)
     Set<LikeHeart> likeHearts = new HashSet<>();

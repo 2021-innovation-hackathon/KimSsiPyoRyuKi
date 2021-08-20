@@ -1,8 +1,9 @@
-package com.hocket.modules.hocket;
+package com.hocket.modules.category;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
-public interface HocketRepository extends JpaRepository<Hocket, Long> {
+public interface CategoryRepository extends JpaRepository<Category, Long>{
+    Category findByTitle(String title);
 }
