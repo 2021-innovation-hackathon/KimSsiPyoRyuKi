@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 public class SimpleHocketResponseDto {
 
     @NotBlank
+    Long id;
+
+    @NotBlank
     private String title;
 
     @NotBlank
