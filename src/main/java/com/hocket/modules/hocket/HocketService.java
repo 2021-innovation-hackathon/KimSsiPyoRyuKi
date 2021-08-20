@@ -4,6 +4,7 @@ import com.hocket.infra.s3.UploadS3;
 import com.hocket.modules.account.Account;
 import com.hocket.modules.account.AccountRepository;
 import com.hocket.modules.category.Category;
+import com.hocket.modules.hocket.dto.SimpleHocketResponseDto;
 import com.hocket.modules.hocket.form.HocketForm;
 import com.hocket.modules.category.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -37,19 +37,39 @@ public class HocketService {
 
         Hocket newHocket = hocketRepository.save(hocket);
 
-        List<Category> collect = hocketForm.getCategoryTitles().stream()
-                .map(t -> categoryRepository.findByTitle(t))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        if(hocketForm.getCategoryTitles() != null){
 
-        for(Category c : collect){
-            if(c != null){
-                newHocket.getCategories().add(c);
+            List<Category> collect = hocketForm.getCategoryTitles().stream()
+                    .map(t -> categoryRepository.findByTitle(t))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            for(Category c : collect){
+                if(c != null){
+                    newHocket.getCategories().add(c);
+                }
             }
         }
 
-        String S3Path = uploadS3.uploadImageToS3(hocketForm.getThumbnailImage(), "thumbnail", String.valueOf(newHocket.getId()));
 
-        newHocket.setThumbnailImage(S3Path);
+        if( hocketForm.getThumbnailImage() != null){
+            String S3Path = uploadS3.uploadImageToS3(hocketForm.getThumbnailImage(), "thumbnail", String.valueOf(newHocket.getId()));
+            newHocket.setThumbnailImage(S3Path);
+        }
+
+    }
+
+    public List<SimpleHocketResponseDto> getSimpleinfo(Long accountId) {
+        List<Hocket> hockets = hocketRepository.findByAccountId(accountId);
+
+        return hockets.stream()
+                    .map(h -> {
+                        SimpleHocketResponseDto responseDto = modelMapper.map(h, SimpleHocketResponseDto.class);
+                        responseDto.setNumberOfHearts(h.getLikeHearts().size());
+                        return responseDto;
+                    })
+                    .collect(Collectors.toList());
+
+
     }
 }
