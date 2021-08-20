@@ -3,6 +3,7 @@ package com.hocket.modules.hocket;
 import com.hocket.modules.account.AccountService;
 import com.hocket.modules.hocket.dto.HocketImageRequestDto;
 import com.hocket.modules.hocket.dto.SimpleHocketResponseDto;
+import com.hocket.modules.hocket.form.AddImageForm;
 import com.hocket.modules.hocket.form.HocketForm;
 import com.hocket.modules.image.Image;
 import com.hocket.modules.image.ImageRepository;
@@ -77,11 +78,27 @@ public class HocketController {
 
     }
 
+
+
+    @PostMapping("hocket/addImage")
+    public ResponseEntity addImageToHocket(@Valid AddImageForm addImageForm){
+        Long accountId = accountService.getAccountIdByToken(addImageForm.getToken());
+        Long hocketId = Long.valueOf(addImageForm.getHocketId());
+
+        if(!isHocketConstructorEqualsRequestedUser(accountId, hocketId)){
+            return ResponseEntity.badRequest().build();
+        }
+
+        hocketService.addImage(hocketId, addImageForm.getImage());
+
+        return ResponseEntity.ok().build();
+
+
+    }
+
     private boolean isHocketConstructorEqualsRequestedUser(Long accountId, Long hocketId) {
         return hocketRepository.findById(hocketId).get().getAccount().getId().equals(accountId);
     }
-
-
 //    @PostMapping("/hocket/test")
 //    public String S3test(@RequestParam("image") MultipartFile multipartFile){
 //
