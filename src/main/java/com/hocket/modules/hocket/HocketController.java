@@ -2,7 +2,9 @@ package com.hocket.modules.hocket;
 
 import com.hocket.infra.s3.UploadS3;
 import com.hocket.modules.account.AccountService;
+import com.hocket.modules.hocket.dto.SimpleHocketResponseDto;
 import com.hocket.modules.hocket.form.HocketForm;
+import javassist.Loader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,11 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
 public class HocketController {
-    private HocketService hocketService;
+    private  final HocketService hocketService;
     private final AccountService accountService;
 
     private final UploadS3 uploadS3;
@@ -37,8 +40,19 @@ public class HocketController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/hocket/simpleList")
+    public List<SimpleHocketResponseDto> getSimpleHocketList(String token){
+
+        Long accountId = accountService.getAccountIdByToken(token);
+        List<SimpleHocketResponseDto> simpleinfo = hocketService.getSimpleinfo(accountId);
+
+        return simpleinfo;
+    }
+
+
+
 //    @PostMapping("/hocket/test")
-//    public String test(@RequestParam("image") MultipartFile multipartFile){
+//    public String S3test(@RequestParam("image") MultipartFile multipartFile){
 //
 //        String thumbnail = uploadS3.uploadImageToS3(multipartFile, "thumbnail", "1");
 //        System.out.println(thumbnail);
