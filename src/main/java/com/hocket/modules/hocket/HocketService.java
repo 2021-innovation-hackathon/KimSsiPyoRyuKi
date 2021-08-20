@@ -13,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -28,6 +30,7 @@ public class HocketService {
     private final ModelMapper modelMapper;
     private final UploadS3 uploadS3;
     private final CategoryRepository categoryRepository;
+    private final ImageRepository imageRepository;
 
 
 
@@ -76,5 +79,18 @@ public class HocketService {
                     })
                     .collect(Collectors.toList());
     }
+
+    public void addImage(Long hocketId, MultipartFile multipartFile) {
+        String url = uploadS3.uploadImageToS3(multipartFile, "hocketImage", String.valueOf(hocketId));
+
+        Image image = new Image();
+        image.setUrl(url);
+        image.setHocket(hocketRepository.findById(hocketId).get());
+        image.setAddDateTime(LocalDateTime.now());
+
+        imageRepository.save(image);
+
+    }
+
 
 }
