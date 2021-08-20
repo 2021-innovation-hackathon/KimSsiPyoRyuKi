@@ -1,16 +1,12 @@
 package com.hocket.modules.hocket;
 
-import com.hocket.infra.s3.UploadS3;
 import com.hocket.modules.account.AccountService;
 import com.hocket.modules.hocket.dto.SimpleHocketResponseDto;
 import com.hocket.modules.hocket.form.HocketForm;
-import javassist.Loader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -20,8 +16,6 @@ import java.util.List;
 public class HocketController {
     private  final HocketService hocketService;
     private final AccountService accountService;
-
-    private final UploadS3 uploadS3;
 
 
     @PostMapping("/hocket/create")

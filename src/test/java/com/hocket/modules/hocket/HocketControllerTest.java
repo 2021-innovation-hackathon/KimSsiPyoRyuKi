@@ -87,10 +87,10 @@ class HocketControllerTest {
 
         hocketService.createHocket(hocketForm, account.getId());
 
-        Hocket byAccountId = hocketRepository.findByAccountId(account.getId()).get(0);
+        Hocket hocket = hocketRepository.findByAccountId(account.getId()).get(0);
 
         LikeHeart likeHeart = new LikeHeart();
-        likeHeart.setHocket(byAccountId);
+        likeHeart.setHocket(hocket);
         likeHeart.setAccount(account);
 
         likeHeartRepository.save(likeHeart);
@@ -108,6 +108,7 @@ class HocketControllerTest {
         assertThat(jsonNode.findValue("title").textValue()).isEqualTo("title");
         assertThat(jsonNode.findValue("startDateTime").textValue()).isEqualTo(start.toString());
         assertThat(jsonNode.findValue("endDateTime").textValue()).isEqualTo(end.toString());
+        assertThat(jsonNode.findValue("id").asLong()).isEqualTo(hocket.getId());
 
 
 
