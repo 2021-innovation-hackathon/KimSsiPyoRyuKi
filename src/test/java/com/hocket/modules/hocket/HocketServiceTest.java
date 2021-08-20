@@ -5,6 +5,8 @@ import com.hocket.modules.account.Account;
 import com.hocket.modules.account.AccountFactory;
 import com.hocket.modules.account.AccountRepository;
 import com.hocket.modules.account.AccountService;
+import com.hocket.modules.category.Category;
+import com.hocket.modules.category.CategoryRepository;
 import com.hocket.modules.hocket.form.HocketForm;
 
 import org.apache.tomcat.util.http.fileupload.FileItem;
@@ -22,8 +24,11 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -47,6 +52,9 @@ class HocketServiceTest {
 
     @MockBean
     UploadS3 uploadS3;
+
+    @Autowired
+    CategoryRepository categoryRepository;
 
 
     @BeforeEach
@@ -75,10 +83,22 @@ class HocketServiceTest {
         hocketForm.setToken(token);
         hocketForm.setRequireDate(false);
         hocketForm.setThumbnailImage(multipartFile);
+        hocketForm.setCategoryTitles(new HashSet<>(){
+            {
+                add("home");
+                add("food");
+            }
+        });
 
         hocketService.createHocket(hocketForm, account.getId());
         Hocket hocket = hocketRepository.findAll().get(0);
+
+        Category home = categoryRepository.findByTitle("home");
+
         assertNotNull(hocket);
+        Set<Category> categories = hocket.getCategories();
+        assertThat(categories.size()).isEqualTo(2);
+        assertTrue(categories.contains(home));
     }
 
 }

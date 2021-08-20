@@ -6,6 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Data
 public class HocketForm {
@@ -37,4 +39,5 @@ public class HocketForm {
 
     private String hocketSpot;
 
+    private Set<String> categoryTitles;
 }
