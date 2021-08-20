@@ -2,6 +2,7 @@ package com.hocket.modules.account;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hocket.modules.hocket.HocketRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,9 +50,12 @@ class AccountControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;
+    @Autowired
+    HocketRepository hocketRepository;
 
     @BeforeEach
     void cleanUp(){
+        hocketRepository.deleteAll();
         accountRepository.deleteAll();
     }
 

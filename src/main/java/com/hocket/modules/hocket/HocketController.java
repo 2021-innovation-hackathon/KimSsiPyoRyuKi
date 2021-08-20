@@ -1,21 +1,31 @@
 package com.hocket.modules.hocket;
 
 import com.hocket.modules.account.AccountService;
+import com.hocket.modules.hocket.dto.HocketImageRequestDto;
 import com.hocket.modules.hocket.dto.SimpleHocketResponseDto;
 import com.hocket.modules.hocket.form.HocketForm;
+import com.hocket.modules.image.Image;
+import com.hocket.modules.image.ImageRepository;
+import com.hocket.modules.image.dto.ImageResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
 public class HocketController {
     private  final HocketService hocketService;
     private final AccountService accountService;
+    private final HocketRepository hocketRepository;
+    private final ImageRepository imageRepository;
+    private final ModelMapper modelMapper;
+
 
 
     @PostMapping("/hocket/create")
@@ -38,11 +48,38 @@ public class HocketController {
     public List<SimpleHocketResponseDto> getSimpleHocketList(String token){
 
         Long accountId = accountService.getAccountIdByToken(token);
+        if(accountId ==null){
+            return null;
+        }
+
         List<SimpleHocketResponseDto> simpleinfo = hocketService.getSimpleinfo(accountId);
 
         return simpleinfo;
     }
 
+    @PostMapping("/hocket/images")
+    public List<ImageResponseDto> getHocketImage(@Valid HocketImageRequestDto hocketImageRequestDto){
+        Long accountId = accountService.getAccountIdByToken(hocketImageRequestDto.getToken());
+        Long hocketId = Long.valueOf(hocketImageRequestDto.getHocketId());
+        if(accountId == null){
+            return null;
+        }
+        if(!isHocketConstructorEqualsRequestedUser(accountId, hocketId)){
+            return null;
+        }
+
+        List<Image> images = imageRepository.findByHocketIdOrderByAddDateTimeDesc(hocketId);
+        List<ImageResponseDto> imageResponseDtos = images.stream()
+                .map(i -> modelMapper.map(i, ImageResponseDto.class))
+                .collect(Collectors.toList());
+
+        return imageResponseDtos;
+
+    }
+
+    private boolean isHocketConstructorEqualsRequestedUser(Long accountId, Long hocketId) {
+        return hocketRepository.findById(hocketId).get().getAccount().getId().equals(accountId);
+    }
 
 
 //    @PostMapping("/hocket/test")

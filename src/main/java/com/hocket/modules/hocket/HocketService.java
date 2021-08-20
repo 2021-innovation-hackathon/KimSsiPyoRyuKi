@@ -7,6 +7,8 @@ import com.hocket.modules.category.Category;
 import com.hocket.modules.hocket.dto.SimpleHocketResponseDto;
 import com.hocket.modules.hocket.form.HocketForm;
 import com.hocket.modules.category.CategoryRepository;
+import com.hocket.modules.image.Image;
+import com.hocket.modules.image.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ public class HocketService {
     private final ModelMapper modelMapper;
     private final UploadS3 uploadS3;
     private final CategoryRepository categoryRepository;
+
 
 
 
@@ -61,6 +64,9 @@ public class HocketService {
 
     public List<SimpleHocketResponseDto> getSimpleinfo(Long accountId) {
         List<Hocket> hockets = hocketRepository.findByAccountId(accountId);
+        if(hockets == null){
+            return null;
+        }
 
         return hockets.stream()
                     .map(h -> {
@@ -69,7 +75,6 @@ public class HocketService {
                         return responseDto;
                     })
                     .collect(Collectors.toList());
-
-
     }
+
 }
