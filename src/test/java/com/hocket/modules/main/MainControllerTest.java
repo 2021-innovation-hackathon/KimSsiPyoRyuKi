@@ -85,7 +85,6 @@ class MainControllerTest {
 
         Account account = new Account();
         account.setNickname("bigave");
-        account.setName("김태준");
         account.setEmail("test@email.com");
 
         JsonNode jsonNode = objectMapper.readTree(objectMapper.writeValueAsString(account));

@@ -1,14 +1,8 @@
 package com.hocket.modules.account;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hocket.modules.account.form.LoginForm;
-import com.hocket.modules.account.form.SignUpForm;
-import com.sun.net.httpserver.Headers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
-import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
@@ -37,15 +31,13 @@ public class AccountService {
     private CacheManager cacheManager;
 
 
-    public Account saveAccount(JsonNode userInfo, String nickname) {
+    public Account saveAccount(JsonNode userInfo) {
         Account account = new Account();
 
         account.setEmail(userInfo.findValue("email").textValue());
-        account.setName(Objects.isNull(userInfo.findValue("nickname"))?null: userInfo.findValue("nickname").textValue());
+        account.setNickname(userInfo.findValue("nickname").textValue());
+        account.setAgeRange(userInfo.findValue("age_range").textValue());
         account.setGender(Objects.isNull(userInfo.findValue("gender"))?null: userInfo.findValue("gender").textValue());
-        account.setAgeRange(Objects.isNull(userInfo.findValue("age_range"))?null: userInfo.findValue("age_range").textValue());
-        account.setProfileImage(Objects.isNull(userInfo.findValue("thumbnail_image_url"))?null: userInfo.findValue("thumbnail_image_url").textValue());
-        account.setNickname(nickname);
 
         Account newAccount = accountRepository.save(account);
         return newAccount;
@@ -55,8 +47,6 @@ public class AccountService {
     public Long login(Long accountId, String token){
 
         //save Cache <Token, account Id>
-
-
         return  accountId;
     }
 

@@ -31,7 +31,7 @@ public class Hocket {
 
     private String description;
 
-    private String location;
+    private String hocketSpot;
 
     @Column(nullable = false)
     private boolean isPublic;
