@@ -1,7 +1,9 @@
 package com.hocket.modules.hocket;
 
 import com.hocket.modules.account.AccountService;
+import com.hocket.modules.category.Category;
 import com.hocket.modules.hocket.dto.HocketImageRequestDto;
+import com.hocket.modules.hocket.dto.HocketResponseDto;
 import com.hocket.modules.hocket.dto.SimpleHocketResponseDto;
 import com.hocket.modules.hocket.form.AddImageForm;
 import com.hocket.modules.hocket.form.HocketForm;
@@ -11,11 +13,15 @@ import com.hocket.modules.image.dto.ImageResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -80,7 +86,7 @@ public class HocketController {
 
 
 
-    @PostMapping("hocket/addImage")
+    @PostMapping("/hocket/addImage")
     public ResponseEntity addImageToHocket(@Valid AddImageForm addImageForm){
         Long accountId = accountService.getAccountIdByToken(addImageForm.getToken());
         Long hocketId = Long.valueOf(addImageForm.getHocketId());
@@ -92,8 +98,22 @@ public class HocketController {
         hocketService.addImage(hocketId, addImageForm.getImage());
 
         return ResponseEntity.ok().build();
+    }
 
+    @PostMapping("/hocket/details")
+    public HocketResponseDto getHocketDetails(String hocketId){
+        Hocket hocket = hocketRepository.findById(Long.valueOf(hocketId)).get();
 
+        if(hocket == null){
+            return null;
+        }
+        HocketResponseDto responseDto = modelMapper.map(hocket, HocketResponseDto.class);
+        hocket.getCategories().stream()
+                .forEach(c -> responseDto.getCategoryTitles().add(c.getTitle()));
+
+        responseDto.setNumberOfHearts(hocket.likeHearts.size());
+
+        return responseDto;
     }
 
     private boolean isHocketConstructorEqualsRequestedUser(Long accountId, Long hocketId) {
