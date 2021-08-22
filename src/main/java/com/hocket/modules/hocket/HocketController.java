@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,7 +52,7 @@ public class HocketController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/hocket/simpleList")
+    @GetMapping("/hocket/simpleList")
     public List<SimpleHocketResponseDto> getSimpleHocketList(String token){
 
         Long accountId = accountService.getAccountIdByToken(token);
@@ -64,7 +65,7 @@ public class HocketController {
         return simpleinfo;
     }
 
-    @PostMapping("/hocket/images")
+    @GetMapping("/hocket/images")
     public List<ImageResponseDto> getHocketImage(@Valid HocketImageRequestDto hocketImageRequestDto){
         Long accountId = accountService.getAccountIdByToken(hocketImageRequestDto.getToken());
         Long hocketId = Long.valueOf(hocketImageRequestDto.getHocketId());
@@ -100,7 +101,7 @@ public class HocketController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/hocket/details")
+    @GetMapping("/hocket/details")
     public HocketResponseDto getHocketDetails(String hocketId){
         Hocket hocket = hocketRepository.findById(Long.valueOf(hocketId)).get();
 

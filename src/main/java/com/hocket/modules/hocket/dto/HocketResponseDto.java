@@ -34,7 +34,4 @@ public class HocketResponseDto {
 
     private List<String> categoryTitles = new ArrayList<>();
 
-
-
-
 }
