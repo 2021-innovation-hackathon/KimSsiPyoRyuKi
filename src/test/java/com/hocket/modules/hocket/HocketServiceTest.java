@@ -11,6 +11,7 @@ import com.hocket.modules.hocket.form.HocketForm;
 
 import com.hocket.modules.image.Image;
 import com.hocket.modules.image.ImageRepository;
+import com.hocket.modules.likeheart.LikeHeartRepository;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
@@ -62,12 +63,18 @@ class HocketServiceTest {
     HocketFactory hocketFactory;
     @Autowired
     ImageRepository imageRepository;
+    @Autowired
+    LikeHeartRepository likeHeartRepository;
 
 
     @BeforeEach
     void cleanUp(){
+        likeHeartRepository.deleteAll();
+        imageRepository.deleteAll();
         hocketRepository.deleteAll();
         accountRepository.deleteAll();
+
+
     }
 
     @DisplayName("하켓 생성 테스트")

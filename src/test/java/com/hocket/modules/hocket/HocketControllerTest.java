@@ -29,8 +29,8 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -67,6 +67,8 @@ class HocketControllerTest {
 
     @BeforeEach
     void cleanUp(){
+        likeHeartRepository.deleteAll();
+        imageRepository.deleteAll();
         hocketRepository.deleteAll();
         accountRepository.deleteAll();
     }
@@ -82,9 +84,8 @@ class HocketControllerTest {
 
         Hocket hocket = hocketFactory.createNewHocket(account, token);
 
-        MvcResult mvcResult = mockMvc.perform(post("/hocket/simpleList")
-                .param("token", token)
-                .with(csrf()))
+        MvcResult mvcResult = mockMvc.perform(get("/hocket/simpleList")
+                .param("token", token))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -125,10 +126,9 @@ class HocketControllerTest {
         imageRepository.save(image2);
 
 
-        MvcResult mvcResult = mockMvc.perform(post("/hocket/images")
+        MvcResult mvcResult = mockMvc.perform(get("/hocket/images")
                 .param("token", token)
-                .param("hocketId", String.valueOf(hocket.getId()))
-                .with(csrf()))
+                .param("hocketId", String.valueOf(hocket.getId())))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -147,7 +147,7 @@ class HocketControllerTest {
         Account account = accountFactory.createNewAccount("김태준", "test@email.com");
         Hocket hocket = hocketFactory.createNewHocket(account, token);
 
-        MvcResult mvcResult = mockMvc.perform(post("/hocket/details")
+        MvcResult mvcResult = mockMvc.perform(get("/hocket/details")
                 .param("hocketId", String.valueOf(hocket.getId())))
                 .andExpect(status().isOk())
                 .andReturn();
