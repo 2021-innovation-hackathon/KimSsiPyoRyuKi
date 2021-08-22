@@ -6,11 +6,11 @@ import com.hocket.modules.account.Account;
 import com.hocket.modules.account.AccountFactory;
 import com.hocket.modules.account.AccountRepository;
 import com.hocket.modules.account.AccountService;
+import com.hocket.modules.category.CategoryRepository;
 import com.hocket.modules.image.Image;
 import com.hocket.modules.image.ImageRepository;
 import com.hocket.modules.likeheart.LikeHeart;
 import com.hocket.modules.likeheart.LikeHeartRepository;
-import org.json.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,16 +19,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -62,7 +61,8 @@ class HocketControllerTest {
     @Autowired
     ImageRepository imageRepository;
 
-    TestRestTemplate restTemplate = new TestRestTemplate();
+    @Autowired
+    CategoryRepository categoryRepository;
 
 
     @BeforeEach
@@ -81,13 +81,6 @@ class HocketControllerTest {
         when(accountService.getAccountIdByToken(token)).thenReturn(account.getId());
 
         Hocket hocket = hocketFactory.createNewHocket(account, token);
-
-        LikeHeart likeHeart = new LikeHeart();
-        likeHeart.setHocket(hocket);
-        likeHeart.setAccount(account);
-
-        likeHeartRepository.save(likeHeart);
-
 
         MvcResult mvcResult = mockMvc.perform(post("/hocket/simpleList")
                 .param("token", token)
@@ -143,6 +136,30 @@ class HocketControllerTest {
 
         assertThat(result.get(0).get("url").textValue()).isEqualTo("http://local.test");
         assertThat(result.get(0).get("addDateTime").textValue()).isEqualTo(now.toString());
+
+    }
+
+    @DisplayName("하켓 상세 정보 ")
+    @Test
+    void hocketDetails() throws Exception {
+
+        String token = UUID.randomUUID().toString();
+        Account account = accountFactory.createNewAccount("김태준", "test@email.com");
+        Hocket hocket = hocketFactory.createNewHocket(account, token);
+
+        MvcResult mvcResult = mockMvc.perform(post("/hocket/details")
+                .param("hocketId", String.valueOf(hocket.getId())))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        assertNotNull(mvcResult.getResponse());
+
+        JsonNode hocketDetails = objectMapper.readTree(mvcResult.getResponse().getContentAsString());
+
+        assertThat(hocketDetails.findValue("title").asText()).isEqualTo("title");
+        assertThat(hocketDetails.findValue("numberOfHearts").asInt()).isEqualTo(1);
+        assertThat(hocketDetails.findValue("categoryTitles").asText().contains("home"));
+        assertThat(hocketDetails.findValue("categoryTitles").asText().contains("etc"));
 
     }
 

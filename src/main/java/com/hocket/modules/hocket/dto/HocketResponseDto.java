@@ -4,19 +4,13 @@ import com.hocket.modules.category.Category;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class HocketResponseDto {
 
-    private Long id;
-
-    private Long accountId;
-
     private String title;
-
-    private String thumbnailImage;
 
     private String description;
 
@@ -34,9 +28,13 @@ public class HocketResponseDto {
 
     private LocalDateTime endDateTime;
 
-    private Integer perWeeks;
+    private int perWeeks;
 
-    private Set<Category> categories = new HashSet<>();
+    private int numberOfHearts;
+
+    private List<String> categoryTitles = new ArrayList<>();
+
+
 
 
 }
