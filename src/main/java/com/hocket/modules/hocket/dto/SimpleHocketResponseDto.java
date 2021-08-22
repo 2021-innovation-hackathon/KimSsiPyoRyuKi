@@ -1,9 +1,6 @@
 package com.hocket.modules.hocket.dto;
 
-import com.hocket.modules.hocket.Hocket;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;

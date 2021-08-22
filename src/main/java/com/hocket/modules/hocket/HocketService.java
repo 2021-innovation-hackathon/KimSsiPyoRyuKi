@@ -35,7 +35,7 @@ public class HocketService {
 
 
 
-    public void createHocket(HocketForm hocketForm, Long accountId) {
+    public Hocket createHocket(HocketForm hocketForm, Long accountId) {
         Account account = accountRepository.findById(accountId).get();
 
         Hocket hocket = modelMapper.map(hocketForm, Hocket.class);
@@ -62,6 +62,8 @@ public class HocketService {
             String S3Path = uploadS3.uploadImageToS3(hocketForm.getThumbnailImage(), "thumbnail", String.valueOf(newHocket.getId()));
             newHocket.setThumbnailImage(S3Path);
         }
+
+        return hocket;
 
     }
 
