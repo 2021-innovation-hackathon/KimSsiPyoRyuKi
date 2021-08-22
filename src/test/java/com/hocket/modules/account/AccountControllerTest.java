@@ -82,8 +82,7 @@ class AccountControllerTest {
         when(accountService.saveAccount(kakaoNode)).thenReturn(accountData);
 
         mockMvc.perform(post("/sign-up")
-                .param("token", token)
-                .with(csrf()))
+                .param("token", token))
                 .andExpect(status().isOk())
                 .andExpect(content().string("ok"));
 
@@ -107,8 +106,7 @@ class AccountControllerTest {
 
 
         mockMvc.perform(post("/sign-up")
-                .param("token", token)
-                .with(csrf()))
+                .param("token", token))
                 .andExpect(status().isOk())
                 .andExpect(content().string("exists.email"));
 
