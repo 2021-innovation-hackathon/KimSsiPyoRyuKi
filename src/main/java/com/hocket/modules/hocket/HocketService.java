@@ -58,7 +58,7 @@ public class HocketService {
         }
 
 
-        if( hocketForm.getThumbnailImage() != null){
+        if(hocketForm.getThumbnailImage() != null){
             String S3Path = uploadS3.uploadImageToS3(hocketForm.getThumbnailImage(), "thumbnail", String.valueOf(newHocket.getId()));
             newHocket.setThumbnailImage(S3Path);
         }

@@ -29,6 +29,8 @@ public class Hocket {
 
     private String thumbnailImage;
 
+    private String thumbnailColor;
+
     private String description;
 
     private String hocketSpot;
