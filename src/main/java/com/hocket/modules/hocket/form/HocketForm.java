@@ -35,6 +35,8 @@ public class HocketForm {
 
     private MultipartFile thumbnailImage;
 
+    private String thumbnailColor;
+
     private String description;
 
     private String hocketSpot;

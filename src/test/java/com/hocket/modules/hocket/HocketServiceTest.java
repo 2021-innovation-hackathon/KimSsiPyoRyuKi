@@ -1,5 +1,6 @@
 package com.hocket.modules.hocket;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hocket.infra.s3.UploadS3;
 import com.hocket.modules.account.Account;
 import com.hocket.modules.account.AccountFactory;
@@ -90,6 +91,9 @@ class HocketServiceTest {
 
         when(uploadS3.uploadImageToS3(multipartFile,"thumbnail", String.valueOf(account.getId()))).thenReturn("url");
 
+        String color = "{\"color\" : {\"r\":169,\"g\"25,\"b\"344} }";
+
+
         HocketForm hocketForm = new HocketForm();
         hocketForm.setAchieved(false);
         hocketForm.setPublic(true);
@@ -97,6 +101,7 @@ class HocketServiceTest {
         hocketForm.setToken(token);
         hocketForm.setRequireDate(false);
         hocketForm.setThumbnailImage(multipartFile);
+        hocketForm.setThumbnailColor(color);
         hocketForm.setCategoryTitles(new HashSet<>(){
             {
                 add("home");
