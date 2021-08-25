@@ -21,13 +21,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -161,6 +161,48 @@ class HocketControllerTest {
         assertThat(hocketDetails.findValue("categoryTitles").asText().contains("home"));
         assertThat(hocketDetails.findValue("categoryTitles").asText().contains("etc"));
 
+    }
+
+    @DisplayName("선택한 카테고리의 하켓들 가져오기")
+    @Test
+    void categoryHocketList() throws Exception {
+
+        Account account = accountFactory.createNewAccount("김태준", "test@email.com");
+
+        Hocket hocket = hocketFactory.createNewHocket(account, UUID.randomUUID().toString());
+        Hocket hocket2 = hocketFactory.createNewHocket(account, UUID.randomUUID().toString());
+
+
+        MvcResult mvcResult = mockMvc.perform(get("/hocket/category")
+                .param("category", "home"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String result = mvcResult.getResponse().getContentAsString();
+        assertNotNull(result);
+
+        JsonNode resultNode = objectMapper.readTree(result);
+        assertThat(resultNode.size()).isEqualTo(2);
+
+    }
+
+    @DisplayName("선택한 카테고리의 하켓들 가져오기 - 해당 카테고리의 하켓이 없음.")
+    @Test
+    void categoryHocketList_nag() throws Exception {
+
+        Account account = accountFactory.createNewAccount("김태준", "test@email.com");
+
+        Hocket hocket = hocketFactory.createNewHocket(account, UUID.randomUUID().toString());
+        Hocket hocket2 = hocketFactory.createNewHocket(account, UUID.randomUUID().toString());
+
+
+        MvcResult mvcResult = mockMvc.perform(get("/hocket/category")
+                .param("category", "challenge"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String result = mvcResult.getResponse().getContentAsString();
+        assertThat(result).isEqualTo("[]");
     }
 
 
