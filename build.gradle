@@ -53,8 +53,6 @@ jacocoTestCoverageVerification {
             }
             excludes = ["*.LikeHeartController", "*.AccountService"]
             includes = ["*.*Service", "*.*Controller"]
-
-
         }
 
     }
@@ -65,7 +63,8 @@ test {
     finalizedBy 'jacocoTestReport'
 }
 
-def querydslDir = "src/main/generated/queryDsl"
+def querydslDir = "$buildDir/generated/queryDsl"
+def generatedDir = "$buildDir/generated"
 
 querydsl {
     library = "com.querydsl:querydsl-apt"
@@ -84,15 +83,16 @@ configurations {
     querydsl.extendsFrom compileClasspath
 }
 
-compileQuerydsl.doFirst {
-    if(file(querydslDir).exists() ) delete(file(querydslDir))
+
+initQuerydslSourcesDir.doFirst {
+        if(file(generatedDir).exists() ) delete(file(generatedDir))
 }
 
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'com.querydsl:querydsl-jpa:5.0.0'
-//    implementation 'com.querydsl:querydsl-apt:5.0.0'
+    implementation 'com.querydsl:querydsl-apt:5.0.0'
     implementation 'com.querydsl:querydsl-core:5.0.0'
 
 

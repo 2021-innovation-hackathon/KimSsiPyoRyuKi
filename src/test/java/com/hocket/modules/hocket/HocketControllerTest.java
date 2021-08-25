@@ -162,6 +162,23 @@ class HocketControllerTest {
         assertThat(hocketDetails.findValue("categoryTitles").asText().contains("etc"));
 
     }
+    @DisplayName("하켓 상세 정보 - 존재하지 않음")
+    @Test
+    void hocketDetails_doseNotExists() throws Exception {
+
+        String token = UUID.randomUUID().toString();
+        Account account = accountFactory.createNewAccount("김태준", "test@email.com");
+
+        MvcResult mvcResult = mockMvc.perform(get("/hocket/details")
+                .param("hocketId", String.valueOf(1)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String result =  mvcResult.getResponse().getContentAsString();
+
+        assertThat(result).isEqualTo("");
+
+    }
 
     @DisplayName("선택한 카테고리의 하켓들 가져오기")
     @Test

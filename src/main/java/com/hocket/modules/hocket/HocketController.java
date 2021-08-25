@@ -106,11 +106,13 @@ public class HocketController {
 
     @GetMapping("/hocket/details")
     public HocketResponseDto getHocketDetails(String hocketId){
-        Hocket hocket = hocketRepository.findById(Long.valueOf(hocketId)).get();
+        Optional<Hocket> byId = hocketRepository.findById(Long.valueOf(hocketId));
 
-        if(hocket == null){
+        if(byId.isEmpty()){
             return null;
         }
+        Hocket hocket = byId.get();
+
         HocketResponseDto responseDto = modelMapper.map(hocket, HocketResponseDto.class);
         hocket.getCategories().stream()
                 .forEach(c -> responseDto.getCategoryTitles().add(c.getTitle()));
