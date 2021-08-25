@@ -2,6 +2,8 @@ package com.hocket.modules.hocket;
 
 import com.hocket.modules.account.AccountService;
 import com.hocket.modules.category.Category;
+import com.hocket.modules.category.CategoryRepository;
+import com.hocket.modules.hocket.dto.CategoryHocketResponseDto;
 import com.hocket.modules.hocket.dto.HocketImageRequestDto;
 import com.hocket.modules.hocket.dto.HocketResponseDto;
 import com.hocket.modules.hocket.dto.SimpleHocketResponseDto;
@@ -33,6 +35,7 @@ public class HocketController {
     private final HocketRepository hocketRepository;
     private final ImageRepository imageRepository;
     private final ModelMapper modelMapper;
+    private final CategoryRepository categoryRepository;
 
 
 
@@ -120,6 +123,25 @@ public class HocketController {
     private boolean isHocketConstructorEqualsRequestedUser(Long accountId, Long hocketId) {
         return hocketRepository.findById(hocketId).get().getAccount().getId().equals(accountId);
     }
+
+    @GetMapping("/hocket/category")
+    public List<CategoryHocketResponseDto> getCategoryHocketList(String category){
+        Category byTitle = categoryRepository.findByTitle(category);
+
+        if(byTitle == null){
+            return null;
+        }
+
+        List<Hocket> hockets = hocketRepository.findByCategory(category);
+
+        List<CategoryHocketResponseDto> responseDtos = hockets.stream()
+                .map(CategoryHocketResponseDto::new)
+                .collect(Collectors.toList());
+
+        return responseDtos;
+    }
+
+
 //    @PostMapping("/hocket/test")
 //    public String S3test(@RequestParam("image") MultipartFile multipartFile){
 //

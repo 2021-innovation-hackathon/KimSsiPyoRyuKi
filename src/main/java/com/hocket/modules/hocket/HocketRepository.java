@@ -6,6 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Transactional(readOnly = true)
-public interface HocketRepository extends JpaRepository<Hocket, Long> {
+public interface HocketRepository extends JpaRepository<Hocket, Long>, HocketRepositoryExtension {
     List<Hocket> findByAccountId(Long accountId);
 }
