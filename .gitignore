@@ -1,0 +1,17 @@
+#Andorid
+
+# Java class files
+
+android/*.class
+
+# Generated files
+android/bin/
+android/gen/
+android/out/
+
+# Gradle files
+android/.gradle/
+android/build/
+
+android/.idea
+
