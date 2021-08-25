@@ -20,16 +20,6 @@
             android:textStyle="bold|italic"
             android:textSize="30sp">
         </com.kims.hackathon.view.UnderlineTextView>
-        <TextView
-            android:id="@+id/hocket_profile_hocket"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="HOCKET"
-            android:textStyle="bold|italic"
-            android:textColor="@color/black"
-            android:textSize="20sp">
-        </TextView>
     </LinearLayout>
 
     <TextView

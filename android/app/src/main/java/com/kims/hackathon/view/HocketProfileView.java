@@ -14,7 +14,6 @@ public class HocketProfileView extends LinearLayout {
 
     private Context context;
     private TextView nicknameView;
-    private TextView hocketView;
     private TextView progressView;
 
     public HocketProfileView(Context context) {
@@ -35,12 +34,11 @@ public class HocketProfileView extends LinearLayout {
         layoutInflater.inflate(R.layout.hocket_profile_view, this);
 
         nicknameView = findViewById(R.id.hocket_profile_nickname);
-        hocketView = findViewById(R.id.hocket_profile_hocket);
         progressView = findViewById(R.id.hocket_profile_progress);
     }
 
     public void setNickname(String nickname) {
-        nickname += "'s";
+        nickname += "'s Hocket";
         nicknameView.setText(nickname);
     }
 

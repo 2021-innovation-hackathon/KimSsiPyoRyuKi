@@ -3,8 +3,11 @@ package com.kims.hackathon.view;
 import static com.google.android.material.tabs.TabLayoutMediator.*;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -16,8 +19,11 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.kims.hackathon.HocketCreateActivity;
+import com.kims.hackathon.MainActivity;
 import com.kims.hackathon.R;
 import com.kims.hackathon.view.fragment.CategoryFragment;
 import com.kims.hackathon.view.fragment.MainHocketFragment;
@@ -29,8 +35,10 @@ import java.util.List;
 public class MainTabView extends LinearLayout {
 
     private Context context;
+
     private TabLayout mainTabLayout;
     private ViewPager2 mainViewPager;
+    private FloatingActionButton fab;
 
     public MainTabView(Context context) {
         super(context);
@@ -53,6 +61,7 @@ public class MainTabView extends LinearLayout {
 
         mainTabLayout = findViewById(R.id.main_tab_layout);
         mainViewPager = findViewById(R.id.main_tab_viewpager);
+        fab = findViewById(R.id.main_tab_fab);
 
         FragmentActivity fragmentActivity = (FragmentActivity)context;
 
@@ -64,6 +73,8 @@ public class MainTabView extends LinearLayout {
 
         mainViewPager.setUserInputEnabled(false);
         mainViewPager.setAdapter(mainTabLayoutFragmentAdapter);
+
+        fab.setOnClickListener(new FabClickListener(context));
     }
 
     private void initTabLayout() {
@@ -115,6 +126,22 @@ public class MainTabView extends LinearLayout {
 
         public void addFragment(Fragment fragment) {
             this.fragments.add(fragment);
+        }
+    }
+
+    private static class FabClickListener implements OnClickListener {
+
+        private Context context;
+
+        FabClickListener(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public void onClick(View view) {
+            MainActivity mainActivity = (MainActivity)context;
+            Intent intent = new Intent(mainActivity, HocketCreateActivity.class);
+            mainActivity.startActivity(intent);
         }
     }
 }
