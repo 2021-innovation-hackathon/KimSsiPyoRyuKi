@@ -1,0 +1,44 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hocket_profile_fragment"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="150dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
+        <com.kims.hackathon.view.UnderlineTextView
+            android:id="@+id/hocket_profile_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:textColor="@color/black"
+            android:textStyle="bold|italic"
+            android:textSize="30sp">
+        </com.kims.hackathon.view.UnderlineTextView>
+        <TextView
+            android:id="@+id/hocket_profile_hocket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="HOCKET"
+            android:textStyle="bold|italic"
+            android:textColor="@color/black"
+            android:textSize="20sp">
+        </TextView>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/hocket_profile_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:text="5 ing / 35 Achieve"
+        android:textStyle="italic"
+        android:textSize="18sp">
+    </TextView>
+</LinearLayout>

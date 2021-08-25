@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="150dp"
+    android:layout_height="260dp"
+    android:orientation="vertical"
+    android:background="@drawable/round_corner"
+    android:elevation="7dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        app:cardCornerRadius="10dp">
+        <ImageView
+            android:id="@+id/category_hocket_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY">
+        </ImageView>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/category_hocket_title"
+        android:layout_width="match_parent"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="13sp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_height="20dp">
+    </TextView>
+
+    <com.kims.hackathon.view.SimpleHeartView
+        android:id="@+id/category_hocket_heart"
+        android:layout_width="match_parent"
+        android:layout_height="25dp">
+    </com.kims.hackathon.view.SimpleHeartView>
+
+</LinearLayout>

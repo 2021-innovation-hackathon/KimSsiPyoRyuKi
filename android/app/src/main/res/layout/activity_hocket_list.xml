@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorOnPrimary"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:paddingTop="15dp"
+        android:paddingHorizontal="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorOnPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/HOCKET"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:id="@+id/toolbar_title"
+            android:textStyle="bold|italic"
+            android:textSize="20sp"/>
+    </androidx.appcompat.widget.Toolbar>
+
+    <com.kims.hackathon.view.HocketProfileView
+        android:id="@+id/hocket_profile_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.kims.hackathon.view.HocketProfileView>
+
+</LinearLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="20dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginStart="5dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:src="@drawable/heart">
+    </ImageView>
+
+    <TextView
+        android:id="@+id/simple_like_num"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:textColor="@color/black">
+    </TextView>
+
+</LinearLayout>
