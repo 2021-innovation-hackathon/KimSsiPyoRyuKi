@@ -3,6 +3,7 @@ package com.hocket.modules.account;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hocket.modules.kakao.dto.KakaoUserInfoResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -70,21 +71,14 @@ class AccountServiceTest {
     @DisplayName("save Account")
     @Test
     void save_account() throws JsonProcessingException {
-        String token = UUID.randomUUID().toString();
 
-        Account accountData = new Account();
-        accountData.setEmail("test@email.com");
-        accountData.setNickname("김태준");
-        accountData.setAgeRange("20~29");
+        KakaoUserInfoResponseDto responseDto = new KakaoUserInfoResponseDto();
+        responseDto.setGender("male");
+        responseDto.setAge_range("20~29");
+        responseDto.setNickname("김태준");
+        responseDto.setEmail("test@email.com");
 
-        Map<String, String> kakaoData =new HashMap<>();
-        kakaoData.put("email", accountData.getEmail());
-        kakaoData.put("nickname", accountData.getNickname());
-        kakaoData.put("age_range", accountData.getAgeRange());
-
-        JsonNode kakaoNode = objectMapper.convertValue(kakaoData, JsonNode.class);
-
-        Account account = accountService.saveAccount(kakaoNode);
+        Account account = accountService.saveAccount(responseDto);
 
         assertNotNull(account);
         assertEquals(account,accountRepository.findByEmail("test@email.com"));

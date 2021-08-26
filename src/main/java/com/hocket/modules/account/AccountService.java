@@ -1,22 +1,19 @@
 package com.hocket.modules.account;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hocket.exception.BadRequestException;
+import com.hocket.modules.kakao.KakaoService;
+import com.hocket.modules.kakao.dto.KakaoUserInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collection;
-import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
@@ -26,95 +23,47 @@ import java.util.Objects;
 public class AccountService {
 
     private final AccountRepository accountRepository;
+    private final CacheManager cacheManager;
+    private final KakaoService kakaoService;
 
-    private RestTemplate restTemplate = new RestTemplate();
-    private CacheManager cacheManager;
 
+    public Account saveAccount(KakaoUserInfoResponseDto userInfo) {
 
-    public Account saveAccount(JsonNode userInfo) {
-        Account account = new Account();
+        Account newAccount = accountRepository.save(userInfo.toEntity());
 
-        account.setEmail(userInfo.findValue("email").textValue());
-        account.setNickname(userInfo.findValue("nickname").textValue());
-        account.setAgeRange(userInfo.findValue("age_range").textValue());
-        account.setGender(Objects.isNull(userInfo.findValue("gender"))?null: userInfo.findValue("gender").textValue());
-
-        Account newAccount = accountRepository.save(account);
         return newAccount;
     }
 
     @CachePut(cacheNames = "account", key = "#token")
     public Long login(Long accountId, String token){
-
         //save Cache <Token, account Id>
+
         return  accountId;
     }
 
     @CacheEvict(cacheNames = "account", key = "#token")
     public void logout(String token){
-
         //remove Cache findBy token
     }
 
-    public boolean checkToken(String token) {
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
-        headers.add("Authorization","Bearer "+token);
-
-        HttpEntity entity = new HttpEntity(headers);
-        try{
-            ResponseEntity<Map> responseEntity =  restTemplate.exchange("https://kapi.kakao.com/v1/user/access_token_info", HttpMethod.GET,entity, Map.class);
-            if(!responseEntity.getStatusCode().is2xxSuccessful()){
-                return false;
-            }
-        }catch (Exception e){
-            System.out.println(e);
-            return false;
-        }
-
-        return true;
-    }
-
-    public JsonNode getInfoByToken(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-        headers.add("Authorization", "Bearer " + token);
-
-        HttpEntity entity = new HttpEntity(headers);
-
-        try {
-            ResponseEntity<JsonNode> responseEntity = restTemplate.postForEntity("https://kapi.kakao.com/v2/user/me", entity, JsonNode.class);
-            if (responseEntity.getStatusCode().is2xxSuccessful()) {
-                return responseEntity.getBody();
-            }
-
-        }catch (Exception e) {
-            log.error(e.getMessage());
-        }
-
-        return null;
-    }
-
     public Long getAccountIdByToken(String token) {
-        boolean isValid = checkToken(token);
-        if(!isValid){
-            return null;
-        }
+        kakaoService.checkToken(token);
+
         Cache.ValueWrapper account = cacheManager.getCache("account").get(token);
         if(account != null){
             return (Long) account.get();
         }
 
-        JsonNode accountInfo = getInfoByToken(token);
-        JsonNode email = accountInfo.get("email");
+        KakaoUserInfoResponseDto accountInfo = kakaoService.getInfoByToken(token);
+        String email = accountInfo.getEmail();
+
 
         if(email == null){
-            return null;
+            throw new IllegalArgumentException("email 정보가 동의되지 않았습니다.");
         }
-        Account byEmail = accountRepository.findByEmail(email.textValue());
+        Account byEmail = accountRepository.findByEmail(email);
         if(byEmail == null){
-            return null;
+            throw new IllegalArgumentException("회원가입 되지 않은 이메일 입니다.");
         }
 
         return byEmail.getId();

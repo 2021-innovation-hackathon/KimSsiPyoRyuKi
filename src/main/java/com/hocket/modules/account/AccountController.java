@@ -3,11 +3,12 @@ package com.hocket.modules.account;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hocket.modules.account.dto.AccountDto;
+import com.hocket.modules.kakao.KakaoService;
+import com.hocket.modules.kakao.dto.KakaoUserInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -21,33 +22,29 @@ public class AccountController {
 
     private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
+    private final KakaoService kakaoService;
 
 
     @PostMapping("/sign-up")
     public String signUp(String token) {
 
-        boolean isValid = accountService.checkToken(token);
+        kakaoService.checkToken(token);
 
-        if(isValid){
-            JsonNode userInfo = accountService.getInfoByToken(token);
-            if(userInfo.findValue("email") == null){
-                return "disagree.email";
-            }
-            if(userInfo.findValue("nickname") == null){
-                return "disagree.nickname";
-            }
-            if(userInfo.findValue("age_range") == null){
-                return "disagree.ageRange";
-            }
-            if(accountRepository.existsByEmail(userInfo.findValue("email").textValue())){
-                return "exists.email";
-            }
-            Account newAccount = accountService.saveAccount(userInfo);
-            accountService.login(newAccount.getId(),token);
+        KakaoUserInfoResponseDto userInfo = kakaoService.getInfoByToken(token);
+        if(userInfo.getEmail() == null){
+            return "disagree.email";
         }
-        if(!isValid){
-            return "wrong.token";
+        if(userInfo.getNickname() == null){
+            return "disagree.nickname";
         }
+        if(userInfo.getAge_range() == null){
+            return "disagree.ageRange";
+        }
+        if(accountRepository.existsByEmail(userInfo.getEmail())){
+            return "exists.email";
+        }
+        Account newAccount = accountService.saveAccount(userInfo);
+        accountService.login(newAccount.getId(),token);
 
         return "ok";
     }
