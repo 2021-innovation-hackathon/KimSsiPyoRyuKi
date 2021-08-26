@@ -1,7 +1,6 @@
 package com.hocket.modules.account;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hocket.modules.kakao.dto.KakaoUserInfoResponseDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,14 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class AccountServiceTest {
@@ -74,7 +70,7 @@ class AccountServiceTest {
 
         KakaoUserInfoResponseDto responseDto = new KakaoUserInfoResponseDto();
         responseDto.setGender("male");
-        responseDto.setAge_range("20~29");
+        responseDto.setAgeRange("20~29");
         responseDto.setNickname("김태준");
         responseDto.setEmail("test@email.com");
 

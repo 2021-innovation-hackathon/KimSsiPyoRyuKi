@@ -12,19 +12,12 @@ import java.util.Set;
 @Data
 public class HocketForm {
 
-    @NotBlank
-    private String token;
-
-    @NotBlank
     private String title;
 
-    @NotBlank
     private boolean isPublic;
 
-    @NotBlank
     private boolean isAchieved;
 
-    @NotBlank
     private boolean isRequireDate;
 
     private LocalDateTime startDateTime;

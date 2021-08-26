@@ -8,12 +8,9 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class AddImageForm {
 
-    @NotBlank
     private String token;
 
-    @NotBlank
     private String hocketId;
 
-    @NotBlank
     private MultipartFile image;
 }

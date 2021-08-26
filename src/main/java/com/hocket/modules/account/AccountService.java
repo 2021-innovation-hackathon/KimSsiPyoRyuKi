@@ -1,7 +1,5 @@
 package com.hocket.modules.account;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.hocket.exception.BadRequestException;
 import com.hocket.modules.kakao.KakaoService;
 import com.hocket.modules.kakao.dto.KakaoUserInfoResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +10,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor

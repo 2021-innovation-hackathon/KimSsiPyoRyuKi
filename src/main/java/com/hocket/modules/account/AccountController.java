@@ -1,17 +1,18 @@
 package com.hocket.modules.account;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hocket.modules.account.dto.AccountDto;
 import com.hocket.modules.kakao.KakaoService;
 import com.hocket.modules.kakao.dto.KakaoUserInfoResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class AccountController {
@@ -26,27 +27,36 @@ public class AccountController {
 
 
     @PostMapping("/sign-up")
-    public String signUp(String token) {
+    public ResponseEntity signUp(String token) {
 
         kakaoService.checkToken(token);
-
         KakaoUserInfoResponseDto userInfo = kakaoService.getInfoByToken(token);
         if(userInfo.getEmail() == null){
-            return "disagree.email";
+            log.info("null email");
+
+            return ResponseEntity.badRequest().build();
+
         }
         if(userInfo.getNickname() == null){
-            return "disagree.nickname";
+            log.info("null nickname");
+
+            return ResponseEntity.badRequest().build();
+
         }
-        if(userInfo.getAge_range() == null){
-            return "disagree.ageRange";
+        if(userInfo.getAgeRange() == null){
+            log.info("null age");
+
+            return ResponseEntity.badRequest().build();
         }
         if(accountRepository.existsByEmail(userInfo.getEmail())){
-            return "exists.email";
+            log.info("exists email");
+
+            return ResponseEntity.badRequest().build();
         }
         Account newAccount = accountService.saveAccount(userInfo);
         accountService.login(newAccount.getId(),token);
 
-        return "ok";
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/account/info/{token}")
@@ -60,6 +70,15 @@ public class AccountController {
         Account account = accountRepository.findById((Long)valueWrapper.get()).get();
 
         return modelMapper.map(account, AccountDto.class);
+    }
+
+    @GetMapping("/account/check")
+    public ResponseEntity isExistsAccount(String token){
+        KakaoUserInfoResponseDto userInfo = kakaoService.getInfoByToken(token);
+        if(!accountRepository.existsByEmail(userInfo.getEmail())){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().build();
 
     }
 

@@ -4,27 +4,27 @@ import com.hocket.exception.BadRequestException;
 import com.hocket.modules.account.AccountService;
 import com.hocket.modules.category.Category;
 import com.hocket.modules.category.CategoryRepository;
-import com.hocket.modules.hocket.dto.CategoryHocketResponseDto;
-import com.hocket.modules.hocket.dto.HocketImageRequestDto;
-import com.hocket.modules.hocket.dto.HocketResponseDto;
-import com.hocket.modules.hocket.dto.SimpleHocketResponseDto;
+import com.hocket.modules.hocket.dto.*;
 import com.hocket.modules.hocket.form.AddImageForm;
 import com.hocket.modules.hocket.form.HocketForm;
 import com.hocket.modules.image.Image;
 import com.hocket.modules.image.ImageRepository;
 import com.hocket.modules.image.dto.ImageResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class HocketController {
@@ -38,9 +38,10 @@ public class HocketController {
 
 
     @PostMapping("/hocket/create")
-    public ResponseEntity createHocket(@Valid HocketForm hocketForm){
-
-        Long accountId = accountService.getAccountIdByToken(hocketForm.getToken());
+    public ResponseEntity createHocket(@RequestBody HocketForm hocketForm, String token, HttpServletRequest request) throws IOException {
+        Long accountId = accountService.getAccountIdByToken(token);
+//        String collect = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+//        log.info("Cline Request String : " + collect);
 
         //이메일 동의가 안됐거나, 토큰이 올바르지 않거나, 회원가입이 되지 않음.
         if(accountId == null){
@@ -135,6 +136,11 @@ public class HocketController {
                 .collect(Collectors.toList());
 
         return responseDtos;
+    }
+
+    @GetMapping("/hocket/wishList")
+    public List<WishHocketResponseDto> getWishHocketList(String token){
+        return null;
     }
 
 

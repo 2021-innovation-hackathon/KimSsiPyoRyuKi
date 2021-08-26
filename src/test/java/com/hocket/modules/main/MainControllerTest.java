@@ -1,5 +1,6 @@
 package com.hocket.modules.main;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hocket.modules.account.Account;
@@ -17,10 +18,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Map;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -63,7 +64,7 @@ class MainControllerTest {
 
         KakaoUserInfoResponseDto responseDto = new KakaoUserInfoResponseDto();
         responseDto.setNickname(account.getNickname());
-        responseDto.setAge_range(account.getAgeRange());
+        responseDto.setAgeRange(account.getAgeRange());
         responseDto.setGender(account.getGender());
         responseDto.setEmail(account.getEmail());
 
@@ -84,7 +85,7 @@ class MainControllerTest {
 
         KakaoUserInfoResponseDto responseDto = new KakaoUserInfoResponseDto();
         responseDto.setNickname("김태준");
-        responseDto.setAge_range("20~29");
+        responseDto.setAgeRange("20~29");
         responseDto.setNickname("김태준");
         responseDto.setEmail("test@emai.com");
 
@@ -95,5 +96,7 @@ class MainControllerTest {
                 .param("token", token))
                 .andExpect(status().isNotFound());
     }
+
+
 
 }
