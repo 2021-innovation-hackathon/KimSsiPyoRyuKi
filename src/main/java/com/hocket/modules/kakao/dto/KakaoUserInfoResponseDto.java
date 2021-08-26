@@ -6,17 +6,17 @@ import lombok.Data;
 @Data
 public class KakaoUserInfoResponseDto {
 
-    private String nickname;
-    private String email;
-    private String age_range;
-    private String gender;
+    private String kakao_accountProfileNickname;
+    private String kakao_accountEmail;
+    private String kakao_accountAge_range;
+    private String kakao_accountGender;
 
     public Account toEntity(){
         Account account = new Account();
-        account.setNickname(this.nickname);
-        account.setEmail(this.email);
-        account.setGender(this.gender);
-        account.setAgeRange(this.age_range);
+        account.setNickname(this.kakao_accountProfileNickname);
+        account.setEmail(this.kakao_accountEmail);
+        account.setGender(this.kakao_accountAge_range);
+        account.setAgeRange(this.kakao_accountGender);
 
         return  account;
     }
