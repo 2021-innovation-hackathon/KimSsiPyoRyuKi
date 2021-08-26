@@ -80,8 +80,7 @@ class AccountControllerTest {
 
         mockMvc.perform(post("/sign-up")
                 .param("token", token))
-                .andExpect(status().isOk())
-                .andExpect(content().string("ok"));
+                .andExpect(status().isOk());
 
     }
 
@@ -104,8 +103,7 @@ class AccountControllerTest {
 
         mockMvc.perform(post("/sign-up")
                 .param("token", token))
-                .andExpect(status().isOk())
-                .andExpect(content().string("exists.email"));
+                .andExpect(status().is4xxClientError());
 
     }
 
