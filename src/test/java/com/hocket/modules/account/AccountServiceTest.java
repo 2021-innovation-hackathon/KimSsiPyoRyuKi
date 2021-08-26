@@ -73,10 +73,10 @@ class AccountServiceTest {
     void save_account() throws JsonProcessingException {
 
         KakaoUserInfoResponseDto responseDto = new KakaoUserInfoResponseDto();
-        responseDto.setGender("male");
-        responseDto.setAge_range("20~29");
-        responseDto.setNickname("김태준");
-        responseDto.setEmail("test@email.com");
+        responseDto.setKakao_accountGender("male");
+        responseDto.setKakao_accountAge_range("20~29");
+        responseDto.setKakao_accountProfileNickname("김태준");
+        responseDto.setKakao_accountEmail("test@email.com");
 
         Account account = accountService.saveAccount(responseDto);
 

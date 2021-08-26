@@ -55,7 +55,7 @@ public class AccountService {
         }
 
         KakaoUserInfoResponseDto accountInfo = kakaoService.getInfoByToken(token);
-        String email = accountInfo.getEmail();
+        String email = accountInfo.getKakao_accountEmail();
 
 
         if(email == null){

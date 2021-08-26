@@ -34,24 +34,24 @@ public class AccountController {
 
         kakaoService.checkToken(token);
         KakaoUserInfoResponseDto userInfo = kakaoService.getInfoByToken(token);
-        if(userInfo.getEmail() == null){
+        if(userInfo.getKakao_accountEmail() == null){
             log.info("null email");
 
             return ResponseEntity.badRequest().build();
 
         }
-        if(userInfo.getNickname() == null){
+        if(userInfo.getKakao_accountProfileNickname() == null){
             log.info("null nickname");
 
             return ResponseEntity.badRequest().build();
 
         }
-        if(userInfo.getAge_range() == null){
+        if(userInfo.getKakao_accountAge_range() == null){
             log.info("null age");
 
             return ResponseEntity.badRequest().build();
         }
-        if(accountRepository.existsByEmail(userInfo.getEmail())){
+        if(accountRepository.existsByEmail(userInfo.getKakao_accountEmail())){
             log.info("exists email");
 
             return ResponseEntity.badRequest().build();
@@ -78,7 +78,7 @@ public class AccountController {
     @GetMapping("/account/check")
     public ResponseEntity isExistsAccount(String token){
         KakaoUserInfoResponseDto userInfo = kakaoService.getInfoByToken(token);
-        if(!accountRepository.existsByEmail(userInfo.getEmail())){
+        if(!accountRepository.existsByEmail(userInfo.getKakao_accountEmail())){
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().build();

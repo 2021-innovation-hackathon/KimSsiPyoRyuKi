@@ -29,10 +29,10 @@ public class MainController {
         kakaoService.checkToken(token);
 
         KakaoUserInfoResponseDto userInfo = kakaoService.getInfoByToken(token);
-        if(userInfo.getEmail() == null){
+        if(userInfo.getKakao_accountEmail() == null){
             return ResponseEntity.badRequest().build();
         }
-        String email = userInfo.getEmail();
+        String email = userInfo.getKakao_accountEmail();
 
         Account account = accountRepository.findByEmail(email);
 
