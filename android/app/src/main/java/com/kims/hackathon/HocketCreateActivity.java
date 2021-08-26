@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.kims.hackathon.client.bucket.HocketService;
 import com.kims.hackathon.view.fragment.CreateMainFragment;
 import com.kims.hackathon.view.fragment.CreateSubFragment;
 
@@ -21,10 +22,15 @@ import java.util.List;
 
 public class HocketCreateActivity extends AppCompatActivity {
 
+    private CreateMainFragment mainFragment;
+    private CreateSubFragment subFragment;
+
+    private HocketService hocketService;
+
     private Toolbar toolbar;
     private ViewPager2 hocketCreateViewPager;
-    private static int HOME = 16908332;
 
+    private static int HOME = 16908332;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,6 +39,11 @@ public class HocketCreateActivity extends AppCompatActivity {
         initView();
         setViewPager();
         setToolBar();
+    }
+
+    public void changeNextFragment() {
+        int current = hocketCreateViewPager.getCurrentItem();
+        this.hocketCreateViewPager.setCurrentItem(current + 1);
     }
 
     private void initView() {
@@ -48,8 +59,10 @@ public class HocketCreateActivity extends AppCompatActivity {
 
     private void setViewPager() {
         HocketCreatePagerAdapter adapter = new HocketCreatePagerAdapter(this);
-        adapter.addFragment(new CreateMainFragment());
-        adapter.addFragment(new CreateSubFragment());
+        mainFragment = new CreateMainFragment();
+        subFragment = new CreateSubFragment();
+        adapter.addFragment(mainFragment);
+        adapter.addFragment(subFragment);
         hocketCreateViewPager.setAdapter(adapter);
     }
 

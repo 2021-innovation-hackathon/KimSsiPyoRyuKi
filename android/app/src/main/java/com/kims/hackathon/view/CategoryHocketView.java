@@ -70,7 +70,6 @@ public class CategoryHocketView extends LinearLayout {
                 .attach();
     }
 
-
     static class CategoryTabConfigStrategy implements TabConfigurationStrategy {
 
         private static final int POPULAR = 0;

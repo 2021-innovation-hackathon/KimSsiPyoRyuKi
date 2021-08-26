@@ -1,0 +1,19 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <com.kims.hackathon.view.SelectButtonView
+        android:id="@+id/public_button"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="5dp">
+    </com.kims.hackathon.view.SelectButtonView>
+
+    <com.kims.hackathon.view.SelectButtonView
+        android:id="@+id/private_button"
+        android:layout_width="70dp"
+        android:layout_height="30dp">
+    </com.kims.hackathon.view.SelectButtonView>
+</LinearLayout>

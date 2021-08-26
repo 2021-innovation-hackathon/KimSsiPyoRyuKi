@@ -1,0 +1,25 @@
+<RelativeLayout
+    android:layout_width="70dp"
+    android:layout_height="30dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageButton
+        android:id="@+id/select_image_button"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:background="@drawable/box_image_border">
+    </ImageButton>
+
+    <TextView
+        android:id="@+id/select_text"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_alignStart="@+id/select_image_button"
+        android:layout_alignTop="@+id/select_image_button"
+        android:layout_alignEnd="@+id/select_image_button"
+        android:layout_alignBottom="@+id/select_image_button"
+        android:gravity="center"
+        android:textColor="@color/text_gray_color"
+        android:textSize="12sp">
+    </TextView>
+</RelativeLayout>

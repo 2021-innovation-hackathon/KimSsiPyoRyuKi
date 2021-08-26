@@ -11,5 +11,6 @@
     <color name="purpley_blue">#FF6241DA</color>
     <color name="purpley_blue_alpha">#706241da</color>
     <color name="underline_text_orange">#FFf97c44</color>
+    <color name="text_gray_color">#FF828282</color>
     <color name="main_tab_layout_color">#FFf8f8f8</color>
 </resources>

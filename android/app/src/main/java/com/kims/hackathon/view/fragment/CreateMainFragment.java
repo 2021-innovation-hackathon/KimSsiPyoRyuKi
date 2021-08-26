@@ -8,18 +8,28 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kims.hackathon.HocketCreateActivity;
 import com.kims.hackathon.R;
+import com.kims.hackathon.view.TermView;
 
 public class CreateMainFragment extends Fragment {
 
-    private Context context;
+    private HocketCreateActivity hocketCreateActivity;
+    private FloatingActionButton fab;
+
+    private EditText titleView;
+    private EditText descView;
+    private TermView termView;
+
 
     @Nullable
     @Override
@@ -31,11 +41,17 @@ public class CreateMainFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initView(view);
+    }
+
+    private void initView(View view) {
+        fab = view.findViewById(R.id.hocket_create_fab);
+        fab.setOnClickListener(fab -> hocketCreateActivity.changeNextFragment());
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        this.context = context;
+        this.hocketCreateActivity = (HocketCreateActivity)context;
     }
 }
