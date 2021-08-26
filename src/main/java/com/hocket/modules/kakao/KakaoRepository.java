@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Map;
 
 
+@Slf4j
 @Repository
 public class KakaoRepository {
 
@@ -35,6 +36,8 @@ public class KakaoRepository {
         if(responseEntity.getStatusCode().is2xxSuccessful()){
             return true;
         }
+        log.info("check token failed");
+
 
         throw new IllegalArgumentException("유효하지 않은 토큰 입니다.");
 
@@ -47,10 +50,16 @@ public class KakaoRepository {
 
         HttpEntity entity = new HttpEntity(headers);
 
-        ResponseEntity<KakaoUserInfoResponseDto> responseEntity = restTemplate.postForEntity(GET_USER_INFO_URL, entity, KakaoUserInfoResponseDto.class);
+//        ResponseEntity<KakaoUserInfoResponseDto> responseEntity = restTemplate.postForEntity(GET_USER_INFO_URL, entity, KakaoUserInfoResponseDto.class);
+        ResponseEntity<JsonNode> responseEntity =  restTemplate.exchange(GET_USER_INFO_URL, HttpMethod.POST,entity,JsonNode.class);
+
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return responseEntity.getBody();
+            KakaoUserInfoResponseDto infoResponseDto = new KakaoUserInfoResponseDto(responseEntity);
+
+            return infoResponseDto;
         }
+        log.info("get info failed");
+
         throw new IllegalArgumentException("유저 정보를 불러오는데 실패했습니다.");
     }
 }

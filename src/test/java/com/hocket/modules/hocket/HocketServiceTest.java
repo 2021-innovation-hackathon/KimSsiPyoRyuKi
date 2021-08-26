@@ -98,7 +98,6 @@ class HocketServiceTest {
         hocketForm.setAchieved(false);
         hocketForm.setPublic(true);
         hocketForm.setTitle("하켓 생성 테스트");
-        hocketForm.setToken(token);
         hocketForm.setRequireDate(false);
         hocketForm.setThumbnailImage(multipartFile);
         hocketForm.setThumbnailColor(color);

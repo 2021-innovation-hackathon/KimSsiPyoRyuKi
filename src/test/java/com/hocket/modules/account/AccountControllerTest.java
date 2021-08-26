@@ -70,7 +70,7 @@ class AccountControllerTest {
 
         KakaoUserInfoResponseDto responseDto = new KakaoUserInfoResponseDto();
         responseDto.setGender("male");
-        responseDto.setAge_range("20~29");
+        responseDto.setAgeRange("20~29");
         responseDto.setNickname("김태준");
         responseDto.setEmail("test@email.com");
 
@@ -80,8 +80,7 @@ class AccountControllerTest {
 
         mockMvc.perform(post("/sign-up")
                 .param("token", token))
-                .andExpect(status().isOk())
-                .andExpect(content().string("ok"));
+                .andExpect(status().isOk());
 
     }
 
@@ -94,7 +93,7 @@ class AccountControllerTest {
 
         KakaoUserInfoResponseDto responseDto = new KakaoUserInfoResponseDto();
         responseDto.setGender("male");
-        responseDto.setAge_range("20~29");
+        responseDto.setAgeRange("20~29");
         responseDto.setNickname("김태준");
         responseDto.setEmail("test@email.com");
 
@@ -104,10 +103,15 @@ class AccountControllerTest {
 
         mockMvc.perform(post("/sign-up")
                 .param("token", token))
-                .andExpect(status().isOk())
-                .andExpect(content().string("exists.email"));
+                .andExpect(status().is4xxClientError());
 
     }
+
+//    @Test
+//    void test(){
+//        String json = "{\"test\"}"
+//
+//    }
 
 
     @DisplayName("계정 정보 가져오기")
