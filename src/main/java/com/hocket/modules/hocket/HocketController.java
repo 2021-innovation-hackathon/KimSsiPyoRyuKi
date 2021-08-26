@@ -1,5 +1,6 @@
 package com.hocket.modules.hocket;
 
+import com.hocket.exception.BadRequestException;
 import com.hocket.modules.account.AccountService;
 import com.hocket.modules.category.Category;
 import com.hocket.modules.category.CategoryRepository;
@@ -15,16 +16,13 @@ import com.hocket.modules.image.dto.ImageResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -103,15 +101,11 @@ public class HocketController {
 
         return ResponseEntity.ok().build();
     }
-
     @GetMapping("/hocket/details")
     public HocketResponseDto getHocketDetails(String hocketId){
         Optional<Hocket> byId = hocketRepository.findById(Long.valueOf(hocketId));
 
-        if(byId.isEmpty()){
-            return null;
-        }
-        Hocket hocket = byId.get();
+        Hocket hocket = byId.orElseThrow(() -> new BadRequestException("Invalid Input"));
 
         HocketResponseDto responseDto = modelMapper.map(hocket, HocketResponseDto.class);
         hocket.getCategories().stream()

@@ -1,7 +1,10 @@
 package com.hocket.modules.hocket.dto;
 
 import com.hocket.modules.category.Category;
+import com.hocket.modules.hocket.Hocket;
 import lombok.Data;
+import org.modelmapper.ModelMapper;
+import org.springframework.ui.ModelMap;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,5 +36,4 @@ public class HocketResponseDto {
     private int numberOfHearts;
 
     private List<String> categoryTitles = new ArrayList<>();
-
 }

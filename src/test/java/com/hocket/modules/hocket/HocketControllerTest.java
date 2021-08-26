@@ -9,8 +9,8 @@ import com.hocket.modules.account.AccountService;
 import com.hocket.modules.category.CategoryRepository;
 import com.hocket.modules.image.Image;
 import com.hocket.modules.image.ImageRepository;
-import com.hocket.modules.likeheart.LikeHeart;
 import com.hocket.modules.likeheart.LikeHeartRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,21 +19,24 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class HocketControllerTest {
 
@@ -63,6 +66,11 @@ class HocketControllerTest {
 
     @Autowired
     CategoryRepository categoryRepository;
+
+    @LocalServerPort
+    int port;
+
+    private TestRestTemplate restTemplate = new TestRestTemplate();
 
 
     @BeforeEach
@@ -166,17 +174,13 @@ class HocketControllerTest {
     @Test
     void hocketDetails_doseNotExists() throws Exception {
 
-        String token = UUID.randomUUID().toString();
-        Account account = accountFactory.createNewAccount("김태준", "test@email.com");
+        String url ="http://localhost:"+port+"/hocket/details";
 
-        MvcResult mvcResult = mockMvc.perform(get("/hocket/details")
+
+        mockMvc.perform(get(url)
                 .param("hocketId", String.valueOf(1)))
-                .andExpect(status().isOk())
-                .andReturn();
+                .andExpect((result -> assertTrue(result.getResolvedException().getMessage().equals("Invalid Input"))));
 
-        String result =  mvcResult.getResponse().getContentAsString();
-
-        assertThat(result).isEqualTo("");
 
     }
 

@@ -1,12 +1,12 @@
 package com.hocket.modules.account;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hocket.modules.hocket.HocketRepository;
+import com.hocket.modules.kakao.KakaoService;
+import com.hocket.modules.kakao.dto.KakaoUserInfoResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,16 +15,11 @@ import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -52,6 +47,8 @@ class AccountControllerTest {
     ObjectMapper objectMapper;
     @Autowired
     HocketRepository hocketRepository;
+    @MockBean
+    KakaoService kakaoService;
 
     @BeforeEach
     void cleanUp(){
@@ -71,15 +68,15 @@ class AccountControllerTest {
         accountData.setNickname("김태준");
         accountData.setAgeRange("20~29");
 
-        Map<String, String> kakaoData =new HashMap<>();
-        kakaoData.put("email", accountData.getEmail());
-        kakaoData.put("nickname", accountData.getNickname());
-        kakaoData.put("age_range", accountData.getAgeRange());
+        KakaoUserInfoResponseDto responseDto = new KakaoUserInfoResponseDto();
+        responseDto.setGender("male");
+        responseDto.setAge_range("20~29");
+        responseDto.setNickname("김태준");
+        responseDto.setEmail("test@email.com");
 
-        JsonNode kakaoNode = objectMapper.convertValue(kakaoData, JsonNode.class);
-        when(accountService.getInfoByToken(token)).thenReturn(kakaoNode);
-        when(accountService.checkToken(token)).thenReturn(true);
-        when(accountService.saveAccount(kakaoNode)).thenReturn(accountData);
+        when(kakaoService.getInfoByToken(token)).thenReturn(responseDto);
+        when(kakaoService.checkToken(token)).thenReturn(true);
+        when(accountService.saveAccount(responseDto)).thenReturn(accountData);
 
         mockMvc.perform(post("/sign-up")
                 .param("token", token))
@@ -95,14 +92,14 @@ class AccountControllerTest {
         String token = UUID.randomUUID().toString();
         Account account = accountFactory.createNewAccount("bigave", "test@email.com");
 
-        Map<String, String> kakaoData =new HashMap<>();
-        kakaoData.put("email", account.getEmail());
-        kakaoData.put("nickname", account.getNickname());
-        kakaoData.put("age_range", account.getAgeRange());
+        KakaoUserInfoResponseDto responseDto = new KakaoUserInfoResponseDto();
+        responseDto.setGender("male");
+        responseDto.setAge_range("20~29");
+        responseDto.setNickname("김태준");
+        responseDto.setEmail("test@email.com");
 
-        JsonNode kakaoNode = objectMapper.convertValue(kakaoData, JsonNode.class);
-        when(accountService.getInfoByToken(token)).thenReturn(kakaoNode);
-        when(accountService.checkToken(token)).thenReturn(true);
+        when(kakaoService.getInfoByToken(token)).thenReturn(responseDto);
+        when(kakaoService.checkToken(token)).thenReturn(true);
 
 
         mockMvc.perform(post("/sign-up")

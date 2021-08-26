@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Transactional(readOnly = true)
-public class HocketRepositoryExtensionImpl extends QuerydslRepositorySupport implements HocketRepositoryExtension{
+public class HocketRepositoryExtensionImpl extends QuerydslRepositorySupport implements HocketRepositoryExtension {
 
     public HocketRepositoryExtensionImpl() {
         super(Hocket.class);

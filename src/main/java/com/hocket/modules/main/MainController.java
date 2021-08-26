@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.hocket.modules.account.Account;
 import com.hocket.modules.account.AccountRepository;
 import com.hocket.modules.account.AccountService;
+import com.hocket.modules.kakao.KakaoService;
+import com.hocket.modules.kakao.dto.KakaoUserInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,24 +19,20 @@ public class MainController {
     private final AccountRepository accountRepository;
     private final AccountService accountService;
 
+    private final KakaoService kakaoService;
+
 
 
     @PostMapping("/login")
     public ResponseEntity login(String token){
-        String email="";
-        boolean isValid = accountService.checkToken(token);
 
-        if(isValid){
-            JsonNode userInfo = accountService.getInfoByToken(token);
+        kakaoService.checkToken(token);
 
-            if(userInfo.findValue("email") ==null){
-                return ResponseEntity.badRequest().build();
-            }
-            email = userInfo.findValue("email").textValue();
-        }
-        if(!isValid){
+        KakaoUserInfoResponseDto userInfo = kakaoService.getInfoByToken(token);
+        if(userInfo.getEmail() == null){
             return ResponseEntity.badRequest().build();
         }
+        String email = userInfo.getEmail();
 
         Account account = accountRepository.findByEmail(email);
 
