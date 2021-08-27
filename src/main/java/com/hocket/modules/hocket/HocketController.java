@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,10 +40,12 @@ public class HocketController {
 
 
     @PostMapping("/hocket/create")
-    public ResponseEntity createHocket(@Valid HocketForm hocketForm, HttpServletRequest request){
+    public ResponseEntity createHocket(@Valid HocketForm hocketForm, HttpServletRequest request) throws IOException {
         log.info("Client Request : ",request);
 
         Long accountId = accountService.getAccountIdByToken(hocketForm.getToken());
+        String collect = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        log.info("Cline Request String : " + collect);
 
         //이메일 동의가 안됐거나, 토큰이 올바르지 않거나, 회원가입이 되지 않음.
         if(accountId == null){
