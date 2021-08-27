@@ -11,17 +11,21 @@ import com.hocket.modules.image.Image;
 import com.hocket.modules.image.ImageRepository;
 import com.hocket.modules.image.dto.ImageResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class HocketController {
@@ -35,7 +39,8 @@ public class HocketController {
 
 
     @PostMapping("/hocket/create")
-    public ResponseEntity createHocket(@Valid HocketForm hocketForm){
+    public ResponseEntity createHocket(@Valid HocketForm hocketForm, HttpServletRequest request){
+        log.info("Client Request : ",request);
 
         Long accountId = accountService.getAccountIdByToken(hocketForm.getToken());
 
