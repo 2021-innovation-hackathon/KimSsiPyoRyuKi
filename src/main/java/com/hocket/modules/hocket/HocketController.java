@@ -40,8 +40,8 @@ public class HocketController {
     @PostMapping("/hocket/create")
     public ResponseEntity createHocket(@RequestBody HocketForm hocketForm, String token, HttpServletRequest request) throws IOException {
         Long accountId = accountService.getAccountIdByToken(token);
-        String collect = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        log.info("Cline Request String : " + collect);
+//        String collect = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+//        log.info("Cline Request String : " + collect);
 
         //이메일 동의가 안됐거나, 토큰이 올바르지 않거나, 회원가입이 되지 않음.
         if(accountId == null){
