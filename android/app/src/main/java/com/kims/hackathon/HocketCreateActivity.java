@@ -13,12 +13,18 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.kakao.sdk.auth.TokenManager;
+import com.kims.hackathon.client.bucket.Hocket;
 import com.kims.hackathon.client.bucket.HocketService;
 import com.kims.hackathon.view.fragment.CreateMainFragment;
 import com.kims.hackathon.view.fragment.CreateSubFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HocketCreateActivity extends AppCompatActivity {
 
@@ -36,9 +42,29 @@ public class HocketCreateActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hocket_create);
+        hocketService = new HocketService("https://hocket-server.herokuapp.com");
         initView();
         setViewPager();
         setToolBar();
+    }
+
+    public void createHocket() {
+        String token = TokenManager.getInstance().getToken().getAccessToken();
+        Hocket hocket = new Hocket();
+        mainFragment.setHocketInfo(hocket);
+        subFragment.setHocketInfo(hocket);
+        hocketService.createHocket(token, hocket, new Callback<Void>(){
+
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
     }
 
     public void changeNextFragment() {

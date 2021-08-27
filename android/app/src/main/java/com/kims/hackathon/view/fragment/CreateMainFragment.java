@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kims.hackathon.HocketCreateActivity;
 import com.kims.hackathon.R;
+import com.kims.hackathon.client.bucket.Hocket;
 import com.kims.hackathon.view.TermView;
 
 public class CreateMainFragment extends Fragment {
@@ -29,7 +30,6 @@ public class CreateMainFragment extends Fragment {
     private EditText titleView;
     private EditText descView;
     private TermView termView;
-
 
     @Nullable
     @Override
@@ -46,6 +46,9 @@ public class CreateMainFragment extends Fragment {
 
     private void initView(View view) {
         fab = view.findViewById(R.id.hocket_create_fab);
+        titleView = view.findViewById(R.id.hocket_create_input_title);
+        descView = view.findViewById(R.id.hocket_create_input_desc);
+        termView = view.findViewById(R.id.term_view);
         fab.setOnClickListener(fab -> hocketCreateActivity.changeNextFragment());
     }
 
@@ -53,5 +56,12 @@ public class CreateMainFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.hocketCreateActivity = (HocketCreateActivity)context;
+    }
+
+    public void setHocketInfo(Hocket hocket) {
+        hocket.setTitle(titleView.getText().toString());
+        hocket.setDescription(descView.getText().toString());
+        hocket.setEndDate(termView.getDate());
+        hocket.setRequireDate(termView.isRequireDate());
     }
 }

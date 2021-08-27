@@ -18,6 +18,8 @@ public class PublicConfigView extends LinearLayout {
     private SelectButtonView publicButton;
     private SelectButtonView privateButton;
 
+    private boolean isPublic = true;
+
     public PublicConfigView(Context context) {
         super(context);
         this.context = context;
@@ -39,6 +41,7 @@ public class PublicConfigView extends LinearLayout {
         publicButton = findViewById(R.id.public_button);
         publicButton.configure("public", "공개", true);
         publicButton.onClick(view -> {
+            isPublic = true;
             publicButton.setSelected(true);
             privateButton.setSelected(false);
             publicButton.changeTheme();
@@ -47,11 +50,16 @@ public class PublicConfigView extends LinearLayout {
         privateButton = findViewById(R.id.private_button);
         privateButton.configure("private", "비공개", false);
         privateButton.onClick(view -> {
+            isPublic = false;
             publicButton.setSelected(false);
             privateButton.setSelected(true);
             publicButton.changeTheme();
             privateButton.changeTheme();
         });
+    }
+
+    public boolean isPublic() {
+        return isPublic;
     }
 
 }

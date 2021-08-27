@@ -67,6 +67,7 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:lines="5"
+        android:minLines="1"
         android:maxLines="5"
         android:textSize="13sp"
         android:textColor="@color/black"
@@ -89,6 +90,7 @@
     </TextView>
 
     <com.kims.hackathon.view.TermView
+        android:id="@+id/term_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="50dp">

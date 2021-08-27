@@ -13,7 +13,7 @@ interface AccountProxyService {
     Call<String> logout(@Query("token") String token);
 
     @POST("/sign-up")
-    Call<String> signUp(@Query("token") String token);
+    Call<Void> signUp(@Query("token") String token);
 
     @GET("/account/info/{token}")
     Call<Account> getAccountInfo(@Query("token") String token);

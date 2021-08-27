@@ -11,19 +11,25 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.kakao.sdk.auth.AuthApiClient;
+import com.kakao.sdk.auth.AuthApiManager;
 import com.kakao.sdk.auth.TokenManager;
 import com.kakao.sdk.auth.model.OAuthToken;
 import com.kakao.sdk.common.KakaoSdk;
 import com.kakao.sdk.user.UserApiClient;
+import com.kims.hackathon.client.account.AccountService;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
     private Context context;
     private Intent intent;
     private ImageButton button;
+    private AccountService accountService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         context = this;
         button = findViewById(R.id.login_btn);
         intent = new Intent(context, MainActivity.class);
+        accountService = new AccountService("https://hocket-server.herokuapp.com");
         if (AuthApiClient.getInstance().hasToken()) {
             startActivity(intent);
         }
@@ -51,10 +58,21 @@ public class LoginActivity extends AppCompatActivity {
 
     private Function2<OAuthToken, Throwable, Unit> loginCallBack(Intent intent) {
         return (oAuthToken, throwable) -> {
-            if (throwable != null) {
-                Log.d("Error", throwable.getMessage());
+            if(throwable == null) {
+                accountService.signUp(oAuthToken.getAccessToken(), new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.d("LoginActivity", t.getMessage());
+                    }
+                });
+                return null;
             } else {
-                startActivity(intent);
+                Log.d("LoginActivity", throwable.getMessage());
             }
             return null;
         };

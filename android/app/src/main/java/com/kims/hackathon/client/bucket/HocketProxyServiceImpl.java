@@ -15,7 +15,7 @@ class HocketProxyServiceImpl implements HocketProxyService {
     }
 
     @Override
-    public Call<String> createHocket() {
-        return hocketProxyService.createHocket();
+    public Call<Void> createHocket(String token, Hocket hocket) {
+        return hocketProxyService.createHocket(token, hocket);
     }
 }

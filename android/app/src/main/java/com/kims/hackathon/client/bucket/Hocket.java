@@ -1,41 +1,46 @@
 package com.kims.hackathon.client.bucket;
 
-import java.time.LocalDateTime;
+import com.google.gson.annotations.SerializedName;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Hocket {
 
+    @SerializedName("title")
     private String title;
 
+    @SerializedName("description")
     private String description;
 
+    @SerializedName("location")
     private String location;
 
+    @SerializedName("thumbnail_image")
     private byte[] thumbnailImage;
 
-    private int perWeeks;
-
+    @SerializedName("is_public")
     private boolean isPublic;
 
+    @SerializedName("is_achieved")
     private boolean isAchieved;
 
+    @SerializedName("is_require_date")
     private boolean isRequireDate;
 
-    private LocalDateTime startDateTime;
+    @SerializedName("category_titles")
+    private List<String> categoryTitles = new ArrayList<>();
 
-    private LocalDateTime endDateTime;
-
+    @SerializedName("end_date")
+    private LocalDate endDate;
 
     public byte[] getThumbnailImage() {
         return thumbnailImage;
     }
-    public int getPerWeeks() {
-        return perWeeks;
-    }
-    public LocalDateTime getEndDateTime() {
-        return endDateTime;
-    }
-    public LocalDateTime getStartDateTime() {
-        return startDateTime;
+
+    public LocalDate getEndDate() {
+        return endDate;
     }
     public String getDescription() {
         return description;
@@ -46,14 +51,19 @@ public class Hocket {
     public String getTitle() {
         return title;
     }
+    public boolean isRequireDate() {
+        return isRequireDate;
+    }
+
+    public List<String> getCategoryTitles() {
+        return categoryTitles;
+    }
+
     public boolean isAchieved() {
         return isAchieved;
     }
     public boolean isPublic() {
         return isPublic;
-    }
-    public boolean isRequireDate() {
-        return isRequireDate;
     }
 
     public void setAchieved(boolean achieved) {
@@ -62,28 +72,25 @@ public class Hocket {
     public void setDescription(String description) {
         this.description = description;
     }
-    public void setEndDateTime(LocalDateTime endDateTime) {
-        this.endDateTime = endDateTime;
-    }
     public void setLocation(String location) {
         this.location = location;
     }
-    public void setPerWeeks(int perWeeks) {
-        this.perWeeks = perWeeks;
-    }
     public void setPublic(boolean isPublic) {
         this.isPublic = isPublic;
-    }
-    public void setRequireDate(boolean isRequireDate) {
-        this.isRequireDate = isRequireDate;
-    }
-    public void setStartDateTime(LocalDateTime startDateTime) {
-        this.startDateTime = startDateTime;
     }
     public void setThumbnailImage(byte[] thumbnailImage) {
         this.thumbnailImage = thumbnailImage;
     }
     public void setTitle(String title) {
         this.title = title;
+    }
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+    public void setCategoryTitles(List<String> categoryTitles) {
+        this.categoryTitles = categoryTitles;
+    }
+    public void setRequireDate(boolean requireDate) {
+        isRequireDate = requireDate;
     }
 }
