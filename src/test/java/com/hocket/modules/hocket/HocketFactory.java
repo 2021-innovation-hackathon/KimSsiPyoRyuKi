@@ -35,7 +35,6 @@ public class HocketFactory {
         LocalDateTime end = LocalDateTime.now().plusMinutes(20);
 
         HocketForm hocketForm = new HocketForm();
-        hocketForm.setToken(token);
         hocketForm.setTitle("title");
         hocketForm.setPublic(true);
         hocketForm.setAchieved(false);

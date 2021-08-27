@@ -38,10 +38,8 @@ public class HocketController {
 
 
     @PostMapping("/hocket/create")
-    public ResponseEntity createHocket(@RequestBody HocketForm hocketForm, HttpServletRequest request) throws IOException {
-        log.info("Client Request : ",request);
-        log.info("Title : " + hocketForm.getTitle());
-        Long accountId = accountService.getAccountIdByToken(hocketForm.getToken());
+    public ResponseEntity createHocket(@RequestBody HocketForm hocketForm, String token, HttpServletRequest request) throws IOException {
+        Long accountId = accountService.getAccountIdByToken(token);
         String collect = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         log.info("Cline Request String : " + collect);
 

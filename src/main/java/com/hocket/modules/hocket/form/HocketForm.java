@@ -12,8 +12,6 @@ import java.util.Set;
 @Data
 public class HocketForm {
 
-    private String token;
-
     private String title;
 
     private boolean isPublic;
