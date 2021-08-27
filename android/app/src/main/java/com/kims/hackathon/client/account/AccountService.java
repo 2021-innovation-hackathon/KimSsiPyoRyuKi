@@ -18,7 +18,7 @@ public class AccountService {
         proxyService.logout(token).enqueue(callback);
     }
 
-    public void signUp(String token, Callback<String> callback) {
+    public void signUp(String token, Callback<Void> callback) {
         proxyService.signUp(token).enqueue(callback);
     }
 

@@ -20,6 +20,8 @@ import androidx.annotation.Nullable;
 
 import com.kims.hackathon.R;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 
 public class TermView extends LinearLayout {
@@ -32,6 +34,12 @@ public class TermView extends LinearLayout {
     private ImageButton datePickerButton;
     private TextView dateTextView;
 
+    private boolean isRequireDate = true;
+
+    private int selectYear;
+    private int selectMonth;
+    private int selectDay;
+
     public TermView(Context context) {
         super(context);
         this.context = context;
@@ -42,6 +50,14 @@ public class TermView extends LinearLayout {
         super(context, attrs);
         this.context = context;
         initView();
+    }
+
+    public LocalDate getDate() {
+        return LocalDate.of(selectYear, selectMonth, selectDay);
+    }
+
+    public boolean isRequireDate() {
+        return isRequireDate;
     }
 
     private void initView() {
@@ -59,6 +75,7 @@ public class TermView extends LinearLayout {
         dateTextView = findViewById(R.id.third_box_date_text);
 
         allowButton.onClick(view -> {
+            isRequireDate = true;
             datePickerButton.setEnabled(true);
             allowButton.setSelected(true);
             denyButton.setSelected(false);
@@ -66,6 +83,7 @@ public class TermView extends LinearLayout {
             denyButton.changeTheme();
         });
         denyButton.onClick(view -> {
+            isRequireDate = false;
             datePickerButton.setEnabled(true);
             allowButton.setSelected(false);
             denyButton.setSelected(true);
@@ -77,6 +95,9 @@ public class TermView extends LinearLayout {
 
     private void setDateText(int year, int month, int day) {
         String date = year + "년 " + month + "월 " + day + " 일";
+        selectYear = year;
+        selectMonth = month;
+        selectDay = day;
         dateTextView.setText(date);
     }
 

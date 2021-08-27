@@ -6,7 +6,11 @@ public class HocketService {
 
     private HocketProxyService hocketProxyService;
 
-    public void createHocket(Hocket hocket, Callback<String> callback) {
-        hocketProxyService.createHocket().enqueue(callback);
+    public HocketService(String baseUrl) {
+        this.hocketProxyService = new HocketProxyServiceImpl(baseUrl);
+    }
+
+    public void createHocket(String token, Hocket hocket, Callback<Void> callback) {
+        hocketProxyService.createHocket(token, hocket).enqueue(callback);
     }
 }

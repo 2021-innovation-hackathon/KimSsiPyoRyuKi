@@ -73,6 +73,10 @@ public class SelectButtonView extends RelativeLayout {
         this.imageButton.setOnClickListener(listener);
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     @Override
     public void setSelected(boolean selected) {
         isSelected = selected;

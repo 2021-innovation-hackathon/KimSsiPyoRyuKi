@@ -24,7 +24,7 @@ class AccountProxyServiceImpl implements AccountProxyService {
     }
 
     @Override
-    public Call<String> signUp(String token) {
+    public Call<Void> signUp(String token) {
         return accountService.signUp(token);
     }
 

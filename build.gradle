@@ -1,0 +1,123 @@
+plugins {
+    id 'org.springframework.boot' version '2.5.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'jacoco'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+
+}
+
+
+group = 'com'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+jacoco {
+    // JaCoCo 버전
+    toolVersion = '0.8.5'
+}
+jacocoTestReport {
+    reports {
+        html.enabled true
+        csv.enabled true
+        xml.enabled false
+    }
+    finalizedBy('jacocoTestCoverageVerification')
+}
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            enabled = true
+            element = 'CLASS'
+
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.0
+            }
+
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.0
+            }
+            excludes = ["*.LikeHeartController", "*.AccountService"]
+            includes = ["*.*Service", "*.*Controller"]
+        }
+
+    }
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
+}
+
+def querydslDir = "$buildDir/generated/queryDsl"
+def generatedDir = "$buildDir/generated"
+
+querydsl {
+    library = "com.querydsl:querydsl-apt"
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+sourceSets {
+    main.java.srcDirs = ['src/main/java', querydslDir]
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+
+
+initQuerydslSourcesDir.doFirst {
+        if(file(generatedDir).exists() ) delete(file(generatedDir))
+}
+
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.querydsl:querydsl-jpa:5.0.0'
+    implementation 'com.querydsl:querydsl-apt:5.0.0'
+    implementation 'com.querydsl:querydsl-core:5.0.0'
+
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.h2database:h2'
+    implementation 'org.postgresql:postgresql'
+    implementation 'org.modelmapper:modelmapper:2.4.4'
+
+
+    // Cache
+    implementation 'org.springframework.boot:spring-boot-starter-cache:2.5.3'
+    implementation 'org.ehcache:ehcache:3.9.5'
+    implementation 'javax.cache:cache-api:1.1.1'
+
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    //Test Code Coverage
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+
