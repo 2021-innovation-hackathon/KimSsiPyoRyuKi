@@ -69,10 +69,10 @@ class AccountControllerTest {
         accountData.setAgeRange("20~29");
 
         KakaoUserInfoResponseDto responseDto = new KakaoUserInfoResponseDto();
-        responseDto.setKakao_accountGender("male");
-        responseDto.setKakao_accountAge_range("20~29");
-        responseDto.setKakao_accountProfileNickname("김태준");
-        responseDto.setKakao_accountEmail("test@email.com");
+        responseDto.setGender("male");
+        responseDto.setAgeRange("20~29");
+        responseDto.setNickname("김태준");
+        responseDto.setEmail("test@email.com");
 
         when(kakaoService.getInfoByToken(token)).thenReturn(responseDto);
         when(kakaoService.checkToken(token)).thenReturn(true);
@@ -92,10 +92,10 @@ class AccountControllerTest {
         Account account = accountFactory.createNewAccount("bigave", "test@email.com");
 
         KakaoUserInfoResponseDto responseDto = new KakaoUserInfoResponseDto();
-        responseDto.setKakao_accountGender("male");
-        responseDto.setKakao_accountAge_range("20~29");
-        responseDto.setKakao_accountProfileNickname("김태준");
-        responseDto.setKakao_accountEmail("test@email.com");
+        responseDto.setGender("male");
+        responseDto.setAgeRange("20~29");
+        responseDto.setNickname("김태준");
+        responseDto.setEmail("test@email.com");
 
         when(kakaoService.getInfoByToken(token)).thenReturn(responseDto);
         when(kakaoService.checkToken(token)).thenReturn(true);

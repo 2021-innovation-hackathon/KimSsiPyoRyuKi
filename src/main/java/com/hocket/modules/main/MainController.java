@@ -1,6 +1,5 @@
 package com.hocket.modules.main;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hocket.modules.account.Account;
 import com.hocket.modules.account.AccountRepository;
 import com.hocket.modules.account.AccountService;
@@ -29,10 +28,10 @@ public class MainController {
         kakaoService.checkToken(token);
 
         KakaoUserInfoResponseDto userInfo = kakaoService.getInfoByToken(token);
-        if(userInfo.getKakao_accountEmail() == null){
+        if(userInfo.getEmail() == null){
             return ResponseEntity.badRequest().build();
         }
-        String email = userInfo.getKakao_accountEmail();
+        String email = userInfo.getEmail();
 
         Account account = accountRepository.findByEmail(email);
 

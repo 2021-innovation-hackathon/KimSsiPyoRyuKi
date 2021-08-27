@@ -1,7 +1,6 @@
 package com.hocket.modules.account;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hocket.modules.account.dto.AccountDto;
 import com.hocket.modules.kakao.KakaoService;
 import com.hocket.modules.kakao.dto.KakaoUserInfoResponseDto;
@@ -12,8 +11,6 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,24 +31,24 @@ public class AccountController {
 
         kakaoService.checkToken(token);
         KakaoUserInfoResponseDto userInfo = kakaoService.getInfoByToken(token);
-        if(userInfo.getKakao_accountEmail() == null){
+        if(userInfo.getEmail() == null){
             log.info("null email");
 
             return ResponseEntity.badRequest().build();
 
         }
-        if(userInfo.getKakao_accountProfileNickname() == null){
+        if(userInfo.getNickname() == null){
             log.info("null nickname");
 
             return ResponseEntity.badRequest().build();
 
         }
-        if(userInfo.getKakao_accountAge_range() == null){
+        if(userInfo.getAgeRange() == null){
             log.info("null age");
 
             return ResponseEntity.badRequest().build();
         }
-        if(accountRepository.existsByEmail(userInfo.getKakao_accountEmail())){
+        if(accountRepository.existsByEmail(userInfo.getEmail())){
             log.info("exists email");
 
             return ResponseEntity.badRequest().build();
@@ -78,7 +75,7 @@ public class AccountController {
     @GetMapping("/account/check")
     public ResponseEntity isExistsAccount(String token){
         KakaoUserInfoResponseDto userInfo = kakaoService.getInfoByToken(token);
-        if(!accountRepository.existsByEmail(userInfo.getKakao_accountEmail())){
+        if(!accountRepository.existsByEmail(userInfo.getEmail())){
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().build();

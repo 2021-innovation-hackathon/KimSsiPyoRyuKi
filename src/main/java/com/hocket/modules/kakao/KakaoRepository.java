@@ -50,9 +50,13 @@ public class KakaoRepository {
 
         HttpEntity entity = new HttpEntity(headers);
 
-        ResponseEntity<KakaoUserInfoResponseDto> responseEntity = restTemplate.postForEntity(GET_USER_INFO_URL, entity, KakaoUserInfoResponseDto.class);
+//        ResponseEntity<KakaoUserInfoResponseDto> responseEntity = restTemplate.postForEntity(GET_USER_INFO_URL, entity, KakaoUserInfoResponseDto.class);
+        ResponseEntity<JsonNode> responseEntity =  restTemplate.exchange(GET_USER_INFO_URL, HttpMethod.POST,entity,JsonNode.class);
+
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return responseEntity.getBody();
+            KakaoUserInfoResponseDto infoResponseDto = new KakaoUserInfoResponseDto(responseEntity);
+
+            return infoResponseDto;
         }
         log.info("get info failed");
 

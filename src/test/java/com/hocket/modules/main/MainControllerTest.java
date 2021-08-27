@@ -1,5 +1,6 @@
 package com.hocket.modules.main;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hocket.modules.account.Account;
@@ -17,10 +18,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Map;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -62,10 +63,10 @@ class MainControllerTest {
         Account account = accountFactory.createNewAccount("bigave","test@email.com");
 
         KakaoUserInfoResponseDto responseDto = new KakaoUserInfoResponseDto();
-        responseDto.setKakao_accountProfileNickname(account.getNickname());
-        responseDto.setKakao_accountAge_range(account.getAgeRange());
-        responseDto.setKakao_accountGender(account.getGender());
-        responseDto.setKakao_accountEmail(account.getEmail());
+        responseDto.setNickname(account.getNickname());
+        responseDto.setAgeRange(account.getAgeRange());
+        responseDto.setGender(account.getGender());
+        responseDto.setEmail(account.getEmail());
 
         when(kakaoService.checkToken(token)).thenReturn(true);
         when(kakaoService.getInfoByToken(token)).thenReturn(responseDto);
@@ -83,10 +84,10 @@ class MainControllerTest {
 
 
         KakaoUserInfoResponseDto responseDto = new KakaoUserInfoResponseDto();
-        responseDto.setKakao_accountProfileNickname("김태준");
-        responseDto.setKakao_accountAge_range("20~29");
-        responseDto.setKakao_accountProfileNickname("김태준");
-        responseDto.setKakao_accountEmail("test@emai.com");
+        responseDto.setNickname("김태준");
+        responseDto.setAgeRange("20~29");
+        responseDto.setNickname("김태준");
+        responseDto.setEmail("test@emai.com");
 
         when(kakaoService.getInfoByToken(token)).thenReturn(responseDto);
         when(kakaoService.checkToken(token)).thenReturn(true);
@@ -95,5 +96,7 @@ class MainControllerTest {
                 .param("token", token))
                 .andExpect(status().isNotFound());
     }
+
+
 
 }

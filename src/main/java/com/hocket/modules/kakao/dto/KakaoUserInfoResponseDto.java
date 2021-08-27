@@ -1,24 +1,41 @@
 package com.hocket.modules.kakao.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hocket.modules.account.Account;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.http.ResponseEntity;
 
+import java.util.Map;
+
+@NoArgsConstructor
 @Data
 public class KakaoUserInfoResponseDto {
 
-    private String kakao_accountProfileNickname;
-    private String kakao_accountEmail;
-    private String kakao_accountAge_range;
-    private String kakao_accountGender;
+    private String nickname;
+    private String email;
+    private String ageRange;
+    private String gender;
 
     public Account toEntity(){
         Account account = new Account();
-        account.setNickname(this.kakao_accountProfileNickname);
-        account.setEmail(this.kakao_accountEmail);
-        account.setGender(this.kakao_accountAge_range);
-        account.setAgeRange(this.kakao_accountGender);
+        account.setNickname(this.nickname);
+        account.setEmail(this.email);
+        account.setGender(this.ageRange);
+        account.setAgeRange(this.gender);
 
         return  account;
     }
+
+    public KakaoUserInfoResponseDto(ResponseEntity<JsonNode> responseEntity){
+
+        JsonNode body = responseEntity.getBody();
+
+        this.nickname = body.findValue("nickname").textValue();
+        this.email = body.findValue("email").textValue();
+        this.ageRange = body.findValue("age_range").textValue();
+        this.gender = body.findValue("gender").textValue();
+    }
+
 
 }
