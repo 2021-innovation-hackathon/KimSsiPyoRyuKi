@@ -4,10 +4,7 @@ import com.hocket.exception.BadRequestException;
 import com.hocket.modules.account.AccountService;
 import com.hocket.modules.category.Category;
 import com.hocket.modules.category.CategoryRepository;
-import com.hocket.modules.hocket.dto.CategoryHocketResponseDto;
-import com.hocket.modules.hocket.dto.HocketImageRequestDto;
-import com.hocket.modules.hocket.dto.HocketResponseDto;
-import com.hocket.modules.hocket.dto.SimpleHocketResponseDto;
+import com.hocket.modules.hocket.dto.*;
 import com.hocket.modules.hocket.form.AddImageForm;
 import com.hocket.modules.hocket.form.HocketForm;
 import com.hocket.modules.image.Image;
@@ -135,6 +132,11 @@ public class HocketController {
                 .collect(Collectors.toList());
 
         return responseDtos;
+    }
+
+    @GetMapping("/hocket/wishList")
+    public List<WishHocketResponseDto> getWishHocketList(String token){
+        return null;
     }
 
 

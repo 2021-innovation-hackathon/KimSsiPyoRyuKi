@@ -102,6 +102,8 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     implementation 'org.postgresql:postgresql'
     implementation 'org.modelmapper:modelmapper:2.4.4'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.4'
+
 
     // Cache
     implementation 'org.springframework.boot:spring-boot-starter-cache:2.5.3'
