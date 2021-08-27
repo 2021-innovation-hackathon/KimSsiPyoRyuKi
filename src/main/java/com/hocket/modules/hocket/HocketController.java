@@ -15,9 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -40,9 +38,9 @@ public class HocketController {
 
 
     @PostMapping("/hocket/create")
-    public ResponseEntity createHocket(@Valid HocketForm hocketForm, HttpServletRequest request) throws IOException {
+    public ResponseEntity createHocket(@RequestBody HocketForm hocketForm, HttpServletRequest request) throws IOException {
         log.info("Client Request : ",request);
-
+        log.info("Title : " + hocketForm.getTitle());
         Long accountId = accountService.getAccountIdByToken(hocketForm.getToken());
         String collect = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         log.info("Cline Request String : " + collect);
