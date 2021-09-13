@@ -6,6 +6,7 @@ import com.hocket.modules.account.AccountRepository;
 import com.hocket.modules.hocket.Hocket;
 import com.hocket.modules.hocket.HocketFactory;
 import com.hocket.modules.hocket.HocketRepository;
+import com.hocket.modules.likeheart.form.AddWishHocketForm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,12 +49,15 @@ class LikeHeartServiceTest {
     @Test
     void addWishHocket() throws Exception {
 
-        String tokent = UUID.randomUUID().toString();
+        String token = UUID.randomUUID().toString();
 
         Account account = accountFactory.createNewAccount("김태준", "test@email.com");
-        Hocket hocket = hocketFactory.createNewHocket(account, tokent);
+        Hocket hocket = hocketFactory.createNewHocket(account, token);
+        AddWishHocketForm addWishHocketForm = new AddWishHocketForm();
+        addWishHocketForm.setHocketId(hocket.getId());
+        addWishHocketForm.setToken(token);
 
-        likeHeartService.addWishHocket(account.getId(),hocket);
+        likeHeartService.addWishHocket(addWishHocketForm);
 
         LikeHeart likeHeart = likeHeartRepository.findAll().get(0);
 

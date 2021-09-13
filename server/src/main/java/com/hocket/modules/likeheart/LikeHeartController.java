@@ -15,26 +15,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 public class LikeHeartController {
-
     private final LikeHeartService likeHeartService;
-    private final AccountService accountService;
-    private final HocketRepository hocketRepository;
 
-
-    @PostMapping("/likeHeart/add")
+    @PostMapping("/likeHeart")
     public ResponseEntity addWishHocket(@Valid AddWishHocketForm addWishHocketForm){
-
-        Long accountId = accountService.getAccountIdByToken(addWishHocketForm.getToken());
-
-        if(accountId == null){
-            return ResponseEntity.badRequest().build();
-        }
-        Optional<Hocket> byId = hocketRepository.findById(addWishHocketForm.getHocketId());
-        if(byId.isEmpty()){
-            return ResponseEntity.badRequest().build();
-        }
-        likeHeartService.addWishHocket(accountId, byId.get());
-
+        likeHeartService.addWishHocket(addWishHocketForm);
         return ResponseEntity.ok().build();
     }
 

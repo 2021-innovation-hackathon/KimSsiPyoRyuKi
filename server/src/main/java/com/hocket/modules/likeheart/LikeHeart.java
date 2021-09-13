@@ -21,4 +21,9 @@ public class LikeHeart {
 
     @ManyToOne
     private Hocket hocket;
+
+    public LikeHeart(Account account, Hocket hocket){
+        this.hocket = hocket;
+        this.account = account;
+    }
 }

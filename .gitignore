@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 #Andorid
 
@@ -15,6 +16,8 @@ android/.gradle/
 android/build/
 
 android/.idea
+=======
+>>>>>>> server
 HELP.md
 .gradle
 build/
@@ -53,4 +56,9 @@ out/
 ### VS Code ###
 .vscode/
 
+<<<<<<< HEAD
 src/main/resources/application-dev.properties
+=======
+
+src/main/resources/application-dev.properties
+>>>>>>> server

@@ -106,6 +106,7 @@ class AccountControllerTest {
                 .andExpect(status().is4xxClientError());
 
     }
+<<<<<<< HEAD
 
 //    @Test
 //    void test(){
@@ -131,4 +132,6 @@ class AccountControllerTest {
     }
 
 
+=======
+>>>>>>> server
 }
