@@ -17,36 +17,23 @@ public class MainController {
 
     private final AccountRepository accountRepository;
     private final AccountService accountService;
-
     private final KakaoService kakaoService;
 
 
 
     @PostMapping("/login")
     public ResponseEntity login(String token){
-
         kakaoService.checkToken(token);
-
         KakaoUserInfoResponseDto userInfo = kakaoService.getInfoByToken(token);
-        if(userInfo.getEmail() == null){
-            return ResponseEntity.badRequest().build();
-        }
-        String email = userInfo.getEmail();
+        Account account = accountService.findByEmail(userInfo.getEmail());
+        accountService.login(account.getId(), token);
 
-        Account account = accountRepository.findByEmail(email);
-
-        if(account == null){
-            return ResponseEntity.notFound().build();
-        }
-        else{
-            accountService.login(account.getId(), token);
-            return ResponseEntity.ok().build();
-        }
+        return ResponseEntity.ok().build();
     }
+    
     @PostMapping("/logout")
     public ResponseEntity logout(String token){
         accountService.logout(token);
-
         return ResponseEntity.ok().build();
     }
 

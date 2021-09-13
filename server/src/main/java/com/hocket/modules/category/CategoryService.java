@@ -19,14 +19,17 @@ public class CategoryService {
     @PostConstruct
     public void initData(){
         if(categoryRepository.count() == 0){
-            List<String> titleList = Arrays.asList("home", "challenge", "hobby", "learning", "exercise", "food", "culture", "travel", "etc");
-
-            List<Category> categories = titleList.stream()
-                    .map(Category::new)
-                    .collect(Collectors.toList());
-
+            List<String> titles = Arrays.asList("home", "challenge", "hobby", "learning", "exercise", "food", "culture", "travel", "etc");
+            List<Category> categories = makeCategoryFromTitle(titles);
             categoryRepository.saveAll(categories);
 
         }
+    }
+
+    private List<Category> makeCategoryFromTitle(List<String> titles) {
+        List<Category> categories = titles.stream()
+                .map(Category::new)
+                .collect(Collectors.toList());
+        return categories;
     }
 }

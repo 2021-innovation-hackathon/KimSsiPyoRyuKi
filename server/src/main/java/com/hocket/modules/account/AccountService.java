@@ -8,6 +8,7 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,16 +24,13 @@ public class AccountService {
 
 
     public Account saveAccount(KakaoUserInfoResponseDto userInfo) {
-
         Account newAccount = accountRepository.save(userInfo.toEntity());
-
         return newAccount;
     }
 
     @CachePut(cacheNames = "account", key = "#token")
     public Long login(Long accountId, String token){
         //save Cache <Token, account Id>
-
         return  accountId;
     }
 
@@ -44,23 +42,79 @@ public class AccountService {
     public Long getAccountIdByToken(String token) {
         kakaoService.checkToken(token);
 
-        Cache.ValueWrapper account = cacheManager.getCache("account").get(token);
-        if(account != null){
-            return (Long) account.get();
+        Long accountId = getAccountIdFromCache(token);
+        if(accountId != null){
+            return accountId;
         }
 
-        KakaoUserInfoResponseDto accountInfo = kakaoService.getInfoByToken(token);
-        String email = accountInfo.getEmail();
+        return getAccountIdFromDB(token);
+    }
 
+    private Long getAccountIdFromCache(String token) {
+        return (Long) cacheManager.getCache("account").get(token).get();
+    }
 
-        if(email == null){
-            throw new IllegalArgumentException("email 정보가 동의되지 않았습니다.");
-        }
+    private Long getAccountIdFromDB(String token) {
+        String email = getEmailByToken(token);
+
         Account byEmail = accountRepository.findByEmail(email);
         if(byEmail == null){
             throw new IllegalArgumentException("회원가입 되지 않은 이메일 입니다.");
         }
-
         return byEmail.getId();
+    }
+
+    private String getEmailByToken(String token) {
+        KakaoUserInfoResponseDto accountInfo = kakaoService.getInfoByToken(token);
+        String email = accountInfo.getEmail();
+        return email;
+    }
+
+    public void createAccountAndLogin(String token) {
+        KakaoUserInfoResponseDto userInfo = ValidationAndGetUserInfo(token);
+        infoValidation(userInfo);
+        
+        Account newAccount = saveAccount(userInfo);
+        login(newAccount.getId(),token);
+    }
+
+    private void infoValidation (KakaoUserInfoResponseDto userInfo) {
+        checkUserAgreement(userInfo);
+        isExistsEmail(userInfo.getEmail());
+    }
+
+    private void isExistsEmail(String email) {
+        if(accountRepository.existsByEmail(email)){
+            log.info("exists email");
+            throw new IllegalArgumentException("이미 가입된 정보입니다.");
+        }
+    }
+
+    private void checkUserAgreement(KakaoUserInfoResponseDto userInfo) {
+        if(userInfo.getEmail() == null){
+            log.info("null email");
+            throw new IllegalArgumentException("이메일 정보 제공 비동의.");
+        }
+        if(userInfo.getNickname() == null){
+            log.info("null nickname");
+            throw new IllegalArgumentException("닉네임 정보 제공 비동의");
+        }
+        if(userInfo.getAgeRange() == null){
+            log.info("null age");
+            throw new IllegalArgumentException("나이 정보 제공 비동의");
+        }
+    }
+
+    private KakaoUserInfoResponseDto ValidationAndGetUserInfo(String token) {
+        kakaoService.checkToken(token);
+        KakaoUserInfoResponseDto userInfo = kakaoService.getInfoByToken(token);
+        return userInfo;
+    }
+
+    public Account findByEmail(String email) {
+        Account account = accountRepository.findByEmail(email);
+        if(account == null){
+            throw new IllegalArgumentException();
+        }
     }
 }

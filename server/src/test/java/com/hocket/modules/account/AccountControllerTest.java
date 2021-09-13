@@ -106,29 +106,4 @@ class AccountControllerTest {
                 .andExpect(status().is4xxClientError());
 
     }
-
-//    @Test
-//    void test(){
-//        String json = "{\"test\"}"
-//
-//    }
-
-
-    @DisplayName("계정 정보 가져오기")
-    @Test
-    void getAccountInfo() throws Exception {
-
-        String token = UUID.randomUUID().toString();
-
-        Account account = accountFactory.createNewAccount("bigave", "test@email.com");
-        cacheManager.getCache("account").put(token, account.getId());
-
-        mockMvc.perform(get("/account/info/"+token)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nickname", is(equalTo("bigave"))));
-
-    }
-
-
 }
